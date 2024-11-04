@@ -1,4 +1,4 @@
-//Ticket Class 
+//Ticket Class22
 
 class Ticket{
     
