@@ -1,0 +1,6 @@
+//Applicant Class 
+
+class Applicant{
+    
+
+};
