@@ -1,0 +1,6 @@
+//Ticket Class 
+
+class Ticket{
+    
+
+};
