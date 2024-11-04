@@ -1,0 +1,6 @@
+//Payment Class 
+
+class Payment{
+    
+
+};
