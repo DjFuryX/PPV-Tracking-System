@@ -1,7 +1,12 @@
 //Ticket Class
 
+
 #include<iostream>
+#include <string>
 using namespace std;
+
+#ifndef MYHEADEFILE_H
+#define MYHEADEFILE_H
 
 class Ticket
 {
@@ -49,3 +54,5 @@ private:
 
 
 };
+
+#endif
