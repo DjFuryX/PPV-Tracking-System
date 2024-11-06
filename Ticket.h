@@ -37,6 +37,8 @@ private:
         courtLocation="notSet";
        }
 
+       //Parameter Constructor
+
        Ticket(int ticNum, string issueDate, string offenceDes, string offenceCode, string plateNumber, 
        float tAmount, string due, string court, string issueOfficer, string cLocation)
        {
@@ -136,8 +138,12 @@ private:
 };
 
 #endif
+
+
+
 /* Main to Test
 #include <iostream>
+#include <string.h>
 using namespace std;
 
 #include <Ticket.h>
@@ -149,7 +155,7 @@ int main() {
     defaultTicket.viewTicketReport();
 
     // Using parameterized constructor
-    Ticket ticket(12345, "2024-11-01", "Speeding", "SP123", "AB-1234", 150.0, "2024-11-30", "2024-12-15", "Officer Smith", "Downtown Court");
+    Ticket ticket(12345, "2024-11-01", "Speeding", "SP123", "AB-1234", 15000.0, "2024-11-30", "2024-12-15", "Officer Smith", "Spanish Town Court");
     cout << "\nInitialized Ticket Report:" << endl;
     ticket.viewTicketReport();
 
