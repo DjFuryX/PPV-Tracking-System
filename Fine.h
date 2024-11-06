@@ -57,7 +57,9 @@ class Fine{
         cout << "Ticket Fine Amount: $" << fineAmount << endl;
     }
 };
+
 #endif
+
 
 
 /*Link to Ticket Method
