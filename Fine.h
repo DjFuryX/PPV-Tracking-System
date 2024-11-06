@@ -45,9 +45,9 @@ class Fine{
 
         // Method to link Fine to a Ticket
         void linkToTicket(const Ticket &ticket) {
-            offenceCode = ticket.getTicketOffenceCode();            // Retrieve offence code from Ticket
-            offenceDescription = ticket.getTicketOffenceDescription(); // Retrieve offence description
-            fineAmount = ticket.getTicketAmount();                    // Retrieve fine amount
+            offenceCode = ticket.getTicketOffenceCode();         //Get  offence code, description and fine from Ticket
+            offenceDescription = ticket.getTicketOffenceDescription(); 
+            fineAmount = ticket.getTicketAmount();                    
         }
 
         //Generate Fine Details
