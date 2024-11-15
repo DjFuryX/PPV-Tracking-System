@@ -1,57 +1,66 @@
-//Fine Class 
+// Fine Class
+#include <iostream>
+using namespace std;
 
-class Fine{
-    private:
-       string offenceCode;
-        string offenceDescription;
-        float fineAmount;
-    
-    public:
-        // Default Constructor 
-        Fine(){
-            offenceCode = ""; 
-            offenceDescription = "notSet"; 
-            fineAmount = 0.0;
-        }
+#ifndef Fine_h
+#define Fine_h
 
-        Fine(string Ocode, string description, float fAmount){
-            offenceCode = Ocode;
-            offenceDescription = description;
-            fineAmount = fAmount;
-        }
+class Fine
+{
+private:
+    string offenceCode;
+    string offenceDescription;
+    float fineAmount;
 
-        // Getter Methods
+public:
+    // Default Constructor
+    Fine()
+    {
+        offenceCode = "";
+        offenceDescription = "notSet";
+        fineAmount = 0.0;
+    }
 
-        string getTicketOffenceCode(){
-            return offenceCode;
-        }
-        float getTicketOffenceCode(){
-            return offenceCode;
-        }
-        string getTicketOffenceDescription(){
-            return ticketOffenceDescription;
-        }
+    Fine(string Ocode, string description, float fAmount)
+    {
+        offenceCode = Ocode;
+        offenceDescription = description;
+        fineAmount = fAmount;
+    }
 
+    // Getter Methods
 
-        //Setter methods for Fine
+    string getTicketOffenceCode()
+    {
+        return offenceCode;
+    }
 
-        void setTicketOffenceDescription(string description){
-            offenceDescription = description;
-        }
-        void setFineAmount(float amount){
-            fineAmount = amount;
-        }
+    string getTicketOffenceDescription()
+    {
+        return offenceDescription;
+    }
 
+    // Setter methods for Fine
 
-        // Method to link Fine to a Ticket
-        void linkToTicket(const Ticket &ticket) {
-            offenceCode = ticket.getTicketOffenceCode();         //Get  offence code, description and fine from Ticket
-            offenceDescription = ticket.getTicketOffenceDescription(); 
-            fineAmount = ticket.getTicketAmount();                    
-        }
+    void setTicketOffenceDescription(string description)
+    {
+        offenceDescription = description;
+    }
+    void setFineAmount(float amount)
+    {
+        fineAmount = amount;
+    }
 
-        //Generate Fine Details
-        void displayFine()  {
+    // Method to link Fine to a Ticket
+    // void linkToTicket(const Ticket &ticket) {
+    //      offenceCode = ticket.getTicketOffenceCode();         //Get  offence code, description and fine from Ticket
+    //     offenceDescription = ticket.getTicketOffenceDescription();
+    //   fineAmount = ticket.getTicketAmount();
+    //   }
+
+    // Generate Fine Details
+    void displayFine()
+    {
         cout << "Ticket Offence Code: " << offenceCode << endl;
         cout << "Ticket Offence Description: " << offenceDescription << endl;
         cout << "Ticket Fine Amount: $" << fineAmount << endl;
@@ -60,17 +69,14 @@ class Fine{
 
 #endif
 
-
-
 /*Link to Ticket Method
-it created a linkage between fine and ticket 
+it created a linkage between fine and ticket
 such copying or getting the offense code and description and
 fine amount from the ticket object to fine object
 
 
 so it pretty much allows the fine to accurately reflect violation details
 from the ticket useful when fine is issued directly based on a ticket offense */
-
 
 /*Main to Test
     #include <iostream>
@@ -82,7 +88,7 @@ from the ticket useful when fine is issued directly based on a ticket offense */
 
     int main() {
     // Creating a Ticket instance
-    Ticket ticket(12345, "2024-11-01", "1001", "Speeding", "AB-1234", 15000.0, 
+    Ticket ticket(12345, "2024-11-01", "1001", "Speeding", "AB-1234", 15000.0,
                   "2024-11-30", "2024-12-15", "Officer Smith", "Spanish Town Court");
 
     // Fine instance that link it to the Ticket
