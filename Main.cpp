@@ -1,18 +1,54 @@
-//Main function
+// Main function
 
 #include <iostream>
+#include "Applicant.h"
 using namespace std;
-#include <Driver.h>
 
-int main(){
+void CreateBlankRecords(string, int, Applicant);
 
-   /*   time_t today = time(&today);
+int main()
+{
+    string filename="ApplicationList";
 
-    Driver a1(121, "Norman", "Norman@gmail.com", today, "Bessie Baker", "Lucea", "Hanover");
+    Applicant a1;
+    Applicant a2;
 
-    Driver a2;
+    CreateBlankRecords(filename,500,a2);
 
-    a1.display();
-    a2.display(); */
+   
+
+   // a1.Display();
+    cout<<a2<<endl;// a2.CreateApplication();
+    a2.CreateApplication();
+
+    cout << "------------------------------------------------";
+    cout<<a2<<endl;
+
+   // a2.SaveApplication();
+
+
     return 0;
 }
+
+
+void  CreateBlankRecords(string filename, int maxRecords, Applicant blank)
+    {
+        try
+        {
+            ofstream file(filename, ios::out | ios::binary);
+            if (file.fail())
+            {
+                throw runtime_error("Exception: Initializing database!");
+            }
+            for (int i = 0; i < maxRecords; i++)
+            {
+                file.seekp(i * sizeof(blank));
+                file.write(reinterpret_cast<const char *>(&blank), sizeof(blank));
+            }
+            file.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }

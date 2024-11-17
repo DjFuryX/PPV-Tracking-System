@@ -9,14 +9,13 @@ private:
     string street;
     string city;
     string parish;
-    
 
 public:
     Address()
     {
         street = "Notset";
         city = "Notset";
-        parish = "Not Set";
+        parish = "NotSet";
     }
 
     Address(string street, string city, string parish)
@@ -26,7 +25,17 @@ public:
         this->parish = parish;
     }
 
-    void display()
+    void SetAdrress()
+    {
+        cout << "Street: ";
+        cin >> street;
+        cout << "city: ";
+        cin >> city;
+        cout << "parish: ";
+        cin >> parish;
+    }
+
+    void Display()
     {
         cout << "Street: " << street << endl;
         cout << "city: " << city << endl;

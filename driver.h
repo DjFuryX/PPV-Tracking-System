@@ -1,23 +1,15 @@
 // Driver Class
-#include <iostream>
-#include <time.h>
-#include<vector>
 
-#include "Address.h"
+#include <vector>
 #include "Ticket.h"
+#include "Applicant.h"
 using namespace std;
 
-class Driver
+class Driver:public Applicant
 {
-protected:
-    int trn;
-    string name;
-    string emailAddr;
-    Address currAddr;
-    time_t dob;
-    vector <Ticket> tickets;//list of tickets that driver has
-    
 
+private:
+    vector<Ticket> tickets; // list of tickets that driver has
     // int unpaidTickets;
     // float totalfineAmount;
 public:
@@ -29,12 +21,10 @@ public:
     }
 
     Driver(int trn, string driverName, string email, time_t dateOfBirth, string street, string city, string parish)
-        : currAddr(street, city, parish)
     {
         this->trn = trn;
         name = driverName;
         emailAddr = email;
-        dob = dateOfBirth;
     }
 
     void display()
@@ -43,9 +33,8 @@ public:
         cout << "Name:" << name << endl;
         cout << "Email Address:" << emailAddr << endl;
         cout << "----------------------------" << endl;
-        currAddr.display();
+        currAddr.Display();
         cout << "----------------------------" << endl;
-        cout << ctime(&dob) << endl;
+      
     }
 };
-
