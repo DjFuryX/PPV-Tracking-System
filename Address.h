@@ -25,6 +25,18 @@ public:
         this->parish = parish;
     }
 
+    string GetStreet(){
+        return street;
+    }
+
+    string GetCity(){
+        return city;
+    }
+
+    string GetParish(){
+        return parish;
+    }
+
     void SetAdrress()
     {
         cout << "Street: ";
@@ -42,3 +54,11 @@ public:
         cout << "parish: " << parish << endl;
     }
 };
+
+
+//Overrides How the objects of this class are stored as string
+ostream &operator<<(ostream &out, Address &c)
+{
+    out << "Street: "<<c.GetStreet() << "city: " << c.GetCity()<< "parish: " <<c.GetParish();
+    return out;
+}

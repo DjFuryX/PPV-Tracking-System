@@ -1,7 +1,7 @@
 // Applicant Class
 #include <string>
 #include <iostream>
-#include <fstream>.
+#include <fstream>
 #include "Address.h"
 #include "Date.h"
 
@@ -17,7 +17,7 @@ protected:
     string emailAddr;
     Address currAddr;
     Date dob;
-    string denyReason[100];
+    char denyReason[100];
     static int totalApp;
     const int MaxAppRecord = 500;
     string filename = "ApplicationList";
@@ -27,9 +27,14 @@ public:
     {
         appID = 0;
         trn = 0;
-        // name = "NotSet";
+        name = "NotSet";
         emailAddr = "NotSet";
         contactnumber = 0;
+    }
+
+    int getappID()
+    {
+        return appID;
     }
 
     int GetTrn()
@@ -40,6 +45,25 @@ public:
     int GetContactNumner()
     {
         return contactnumber;
+    }
+
+    string GetName()
+    {
+        return name;
+    }
+    string GetEmailAddr()
+    {
+        return emailAddr;
+    }
+
+    Address GetAddress()
+    {
+        return currAddr;
+    }
+
+    Date GetDob()
+    {
+        return dob;
     }
 
     void CreateApplication()
@@ -67,6 +91,7 @@ public:
 
     void Display()
     {
+
         cout << "Appicants TRN " << trn << endl;
         cout << "Applicant's Full Name " << name << endl;
         cout << "Applicant's Email Address " << emailAddr << endl;
@@ -84,13 +109,14 @@ public:
 
         try
         {
-            fstream file(filename, ios::out | ios::binary);
+            fstream file(filename.append(".dat"), ios::out | ios::binary);
             if (file.fail())
             {
                 throw runtime_error("Exception: storing record");
             }
             file.seekp((appID - OFFSET) * sizeof(*this));
             file.write(reinterpret_cast<const char *>(this), sizeof(*this));
+            cout << reinterpret_cast<const char *>(this), sizeof(*this);
             file.close();
         }
         catch (runtime_error &e)
@@ -99,7 +125,8 @@ public:
         }
     }
 
-    void SaveApplicationSeq(){
+    void SaveApplicationSeq()
+    {
         try
         {
             ofstream dataFile(filename.append(".txt"), ios::app);
@@ -109,7 +136,14 @@ public:
                 throw runtime_error("cannot access file");
             }
 
-            dataFile << appID << "\t" << trn << "\t" << contactnumber << endl;
+            dataFile << "Appicants TRN: " << trn << endl;
+            dataFile << "Applicant's Full Name: " << name << endl;
+            dataFile << "Applicant's Email Address: " << emailAddr << endl;
+            dataFile << "Applicant's Contact Number: " << contactnumber << endl;
+            dataFile << "Applicant's Date of Birth: " << endl;
+            dataFile << dob;
+            dataFile << "Applicant's Address: " << endl;
+            dataFile << currAddr;
             dataFile.close();
         }
         catch (runtime_error &err)
@@ -117,17 +151,16 @@ public:
             cerr << err.what() << endl;
         }
     }
-
 };
-
-
 
 // initialize static attribute
 int Applicant::totalApp = 0;
 
-//Overrides How the objects of this class are stored as string
+// Overrides How the objects of this class are stored as string
 ostream &operator<<(ostream &out, Applicant &c)
 {
-    out << c.GetTrn() << ":" << c.GetContactNumner();
+    out << c.getappID() << c.GetTrn() << c.GetContactNumner() << c.GetContactNumner();
+    out << c.GetAddress().GetStreet() << c.GetAddress().GetCity() << c.GetAddress().GetParish();
+    out << c.GetDob().GetDay() << c.GetDob().GetMonth() << c.GetDob().GetYear();
     return out;
 }

@@ -72,3 +72,11 @@ public:
         //  cout << ctime(&fdate) << endl;
     }
 };
+
+
+//Overrides How the objects of this class are stored as string
+ostream &operator<<(ostream &out, Date &c)
+{
+    out << c.GetDay() << "/" << c.GetMonth() << "/" << c.GetYear()<<endl;
+    return out;
+}
