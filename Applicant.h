@@ -9,6 +9,12 @@ using namespace std;
 
 class Applicant
 {
+
+private:
+    char denyReason[100];
+    const int MaxAppRecord = 1;
+    const int MaxStringSize = 50;
+
 protected:
     int trn;
     int appID = 100;
@@ -17,19 +23,16 @@ protected:
     string emailAddr;
     Address currAddr;
     Date dob;
-    char denyReason[100];
     static int totalApp;
-    const int MaxAppRecord = 500;
-    string filename = "ApplicationList";
-
+    
 public:
     Applicant()
     {
-        appID = 0;
-        trn = 0;
+        appID = 100;
+        trn = 12;
         name = "NotSet";
         emailAddr = "NotSet";
-        contactnumber = 0;
+        contactnumber = 12232323;
     }
 
     int getappID()
@@ -66,15 +69,39 @@ public:
         return dob;
     }
 
+    void SetTRn(istream &stream)
+    {
+        stream >> trn;
+    }
+
+    void SetName(istream &stream)
+    {
+        try
+        {
+            stream.ignore();
+            getline(stream, name, '\n');
+            name.append("\0");
+            if (name.length() > MaxStringSize)
+            {
+                throw runtime_error("Name should not exceed " + to_string(MaxStringSize) + " characters");
+            }
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+            SetName(cin);
+        }
+    }
+
+
     void CreateApplication()
     {
         cout << "Please Enter Appicants TRN" << endl;
-        cin >> trn;
+        SetTRn(cin);
 
         cout << "Please Enter Applicant's Full Name" << endl;
-        cin.ignore();
-        getline(cin, name, '\n');
-
+        SetName(cin);
+        
         cout << "Please Enter Applicant's Date of Birth" << endl;
         dob.SetDob();
 
@@ -82,7 +109,7 @@ public:
         currAddr.SetAdrress();
 
         cout << "Please Enter Applicant's Email Address" << endl;
-        cin >> emailAddr;
+        cin>>emailAddr;
 
         cout << "Please Enter Applicant's Contact Number" << endl;
         cin >> contactnumber;
@@ -91,32 +118,53 @@ public:
 
     void Display()
     {
-
-        cout << "Appicants TRN " << trn << endl;
-        cout << "Applicant's Full Name " << name << endl;
-        cout << "Applicant's Email Address " << emailAddr << endl;
-        cout << "Applicant's Contact Number " << contactnumber << endl;
-        cout << "Applicant's Date of Birth " << endl;
+        cout<< "Applicant's Id: "<<appID<<endl;
+        cout << "Applicant's TRN: " << trn << endl;
+        cout << "Applicant's Full Name: " << name << endl;
+        cout << "Applicant's Email Address: " << emailAddr << endl;
+        cout << "Applicant's Contact Number: " << contactnumber << endl;
+        cout << "Applicant's Date of Birth: " << endl;
         dob.Display();
         cout << "Applicant's Address" << endl;
         currAddr.Display();
+        cout << "------------------" << endl;
     }
 
     void SaveApplication()
     {
-        string filename;
-        int OFFSET = 100;
-
+        int OFFSET = 99;
+        string filename = "ApplicationList.dat";
         try
         {
-            fstream file(filename.append(".dat"), ios::out | ios::binary);
+            fstream file(filename, ios::out | ios::binary);
             if (file.fail())
             {
                 throw runtime_error("Exception: storing record");
             }
             file.seekp((appID - OFFSET) * sizeof(*this));
-            file.write(reinterpret_cast<const char *>(this), sizeof(*this));
-            cout << reinterpret_cast<const char *>(this), sizeof(*this);
+            file.write(reinterpret_cast<char *>(this), sizeof(*this));
+            file.close();
+        }
+        catch (runtime_error &error)
+        {
+            cerr << error.what() << endl;
+        }
+    }
+
+    void retrieveApplication(int id)
+    {
+        string filename = "ApplicationList.dat";
+
+        int OFFSET = 99;
+        try
+        {
+            ifstream file(filename, ios::in | ios::binary);
+            if (file.fail())
+            {
+                throw runtime_error("Exception: retrieving record");
+            }
+            file.seekg((id - OFFSET) * sizeof(*this));
+            file.read(reinterpret_cast< char *>(this), sizeof(*this));
             file.close();
         }
         catch (runtime_error &e)
@@ -125,30 +173,26 @@ public:
         }
     }
 
-    void SaveApplicationSeq()
+    void CreateBlankRecords()
     {
+        string filename = "ApplicationList.dat";
         try
         {
-            ofstream dataFile(filename.append(".txt"), ios::app);
-
-            if (dataFile.fail())
+            ofstream file(filename, ios::out | ios::binary);
+            if (file.fail())
             {
-                throw runtime_error("cannot access file");
+                throw runtime_error("Exception: Initializing database!");
             }
-
-            dataFile << "Appicants TRN: " << trn << endl;
-            dataFile << "Applicant's Full Name: " << name << endl;
-            dataFile << "Applicant's Email Address: " << emailAddr << endl;
-            dataFile << "Applicant's Contact Number: " << contactnumber << endl;
-            dataFile << "Applicant's Date of Birth: " << endl;
-            dataFile << dob;
-            dataFile << "Applicant's Address: " << endl;
-            dataFile << currAddr;
-            dataFile.close();
+            for (int i = 0; i < MaxAppRecord; i++)
+            {
+                file.seekp(i * sizeof(*this));
+                file.write(reinterpret_cast<const char *>(this), sizeof(*this));
+            }
+            file.close();
         }
-        catch (runtime_error &err)
+        catch (runtime_error &e)
         {
-            cerr << err.what() << endl;
+            cerr << e.what() << endl;
         }
     }
 };
@@ -156,11 +200,3 @@ public:
 // initialize static attribute
 int Applicant::totalApp = 0;
 
-// Overrides How the objects of this class are stored as string
-ostream &operator<<(ostream &out, Applicant &c)
-{
-    out << c.getappID() << c.GetTrn() << c.GetContactNumner() << c.GetContactNumner();
-    out << c.GetAddress().GetStreet() << c.GetAddress().GetCity() << c.GetAddress().GetParish();
-    out << c.GetDob().GetDay() << c.GetDob().GetMonth() << c.GetDob().GetYear();
-    return out;
-}

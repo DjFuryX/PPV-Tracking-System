@@ -1,6 +1,6 @@
 // Driver Class
 #include <iostream>
-
+#include <string.h>
 using namespace std;
 
 class Address
@@ -9,6 +9,7 @@ private:
     string street;
     string city;
     string parish;
+    int MaxstringSize = 50;
 
 public:
     Address()
@@ -25,15 +26,18 @@ public:
         this->parish = parish;
     }
 
-    string GetStreet(){
+    string GetStreet()
+    {
         return street;
     }
 
-    string GetCity(){
+    string GetCity()
+    {
         return city;
     }
 
-    string GetParish(){
+    string GetParish()
+    {
         return parish;
     }
 
@@ -53,12 +57,14 @@ public:
         cout << "city: " << city << endl;
         cout << "parish: " << parish << endl;
     }
+
+  
+
 };
 
-
-//Overrides How the objects of this class are stored as string
+// Overrides How the objects of this class are stored as string
 ostream &operator<<(ostream &out, Address &c)
 {
-    out << "Street: "<<c.GetStreet() << "city: " << c.GetCity()<< "parish: " <<c.GetParish();
+    out << "Street: " << c.GetStreet() << "city: " << c.GetCity() << "parish: " << c.GetParish();
     return out;
 }
