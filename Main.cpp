@@ -4,23 +4,19 @@
 #include "Applicant.h"
 using namespace std;
 
-void CreateBlankRecords(string, int, Applicant);
-
 int main()
 {
-    string filename = "ApplicationList";
+  Applicant a2;
 
-    Applicant a2;
-
-   //a2.CreateBlankRecords();
-    a2.Display();
-
-  //a2.CreateApplication();
+  // a2.CreateBlankRecords();
+  a2.Display();
+  a2.saveTest();
+  // a2.CreateApplication();
   //  a2.SaveApplication();
 
-    a2.retrieveApplication(100);
+  //a2.retrieveApplication(100);
 
-    a2.Display();
+  a2.Display();
 
-    return 0;
+  return 0;
 }

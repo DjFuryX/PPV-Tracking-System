@@ -12,8 +12,9 @@ class Applicant
 
 private:
     string denyReason;
-    const int MaxAppRecord = 1;
+    const int MaxAppRecord = 500;
     const int MaxStringSize = 50;
+    static int totalApp;
 
 protected:
     int trn;
@@ -23,18 +24,17 @@ protected:
     string emailAddr;
     Address currAddr;
     Date dob;
-    static int totalApp;
     
+
 public:
     Applicant()
     {
         appID = 100;
-        trn = 12;
+        trn = 0;
         name = "NotSet";
         emailAddr = "NotSet";
         contactnumber = 12232323;
     }
-
     int getappID()
     {
         return appID;
@@ -80,7 +80,6 @@ public:
         {
             stream.ignore();
             getline(stream, name, '\n');
-            name.append("\0");
             if (name.length() > MaxStringSize)
             {
                 throw runtime_error("Name should not exceed " + to_string(MaxStringSize) + " characters");
@@ -93,7 +92,6 @@ public:
         }
     }
 
-
     void CreateApplication()
     {
         cout << "Please Enter Appicants TRN" << endl;
@@ -101,7 +99,7 @@ public:
 
         cout << "Please Enter Applicant's Full Name" << endl;
         SetName(cin);
-        
+
         cout << "Please Enter Applicant's Date of Birth" << endl;
         dob.SetDob();
 
@@ -109,7 +107,7 @@ public:
         currAddr.SetAdrress();
 
         cout << "Please Enter Applicant's Email Address" << endl;
-        cin>>emailAddr;
+        cin >> emailAddr;
 
         cout << "Please Enter Applicant's Contact Number" << endl;
         cin >> contactnumber;
@@ -118,7 +116,7 @@ public:
 
     void Display()
     {
-        cout<< "Applicant's Id: "<<appID<<endl;
+        cout << "Applicant's Id: " << appID << endl;
         cout << "Applicant's TRN: " << trn << endl;
         cout << "Applicant's Full Name: " << name << endl;
         cout << "Applicant's Email Address: " << emailAddr << endl;
@@ -128,6 +126,7 @@ public:
         cout << "Applicant's Address" << endl;
         currAddr.Display();
         cout << "------------------" << endl;
+
     }
 
     void SaveApplication()
@@ -164,22 +163,18 @@ public:
                 throw runtime_error("Exception: retrieving record");
             }
             file.seekg((id - OFFSET) * sizeof(*this));
-            file.read(reinterpret_cast< char *>(this), sizeof(*this));
+            file.read(reinterpret_cast<char *>(this), sizeof(*this));
             file.close();
         }
         catch (runtime_error &e)
         {
             cerr << e.what() << endl;
         }
-
     }
 
     void CreateBlankRecords()
     {
         string filename = "ApplicationList.dat";
-
-        
-
         try
         {
             ofstream file(filename, ios::out | ios::binary);
@@ -199,8 +194,9 @@ public:
             cerr << e.what() << endl;
         }
     }
+
+
 };
 
 // initialize static attribute
 int Applicant::totalApp = 0;
-
