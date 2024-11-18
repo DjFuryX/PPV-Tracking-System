@@ -9,8 +9,6 @@ private:
     string street;
     string city;
     string parish;
-    int MaxstringSize = 50;
-
 public:
     Address()
     {

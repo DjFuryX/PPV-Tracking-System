@@ -11,7 +11,7 @@ class Applicant
 {
 
 private:
-    char denyReason[100];
+    string denyReason;
     const int MaxAppRecord = 1;
     const int MaxStringSize = 50;
 
@@ -171,11 +171,15 @@ public:
         {
             cerr << e.what() << endl;
         }
+
     }
 
     void CreateBlankRecords()
     {
         string filename = "ApplicationList.dat";
+
+        
+
         try
         {
             ofstream file(filename, ios::out | ios::binary);

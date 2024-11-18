@@ -9,7 +9,6 @@ private:
     int month;
     int year;
     // time_t fdate;
-
 public:
     Date()
     {
