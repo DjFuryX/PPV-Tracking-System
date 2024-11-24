@@ -1,5 +1,9 @@
 //Payment Class 
 
+#include <iostream>
+using namespace std;
+
+
 class Payment{
 
     private:
