@@ -11,7 +11,7 @@ class Applicant
 {
 
 private:
-    string denyReason;
+    // string denyReason;
     const int MaxAppRecord = 500;
     const int MaxStringSize = 50;
     static int totalApp;
@@ -20,18 +20,19 @@ protected:
     int trn;
     int appID = 100;
     int contactnumber;
-    string name;
+    string fname;
+    string lname;
     string emailAddr;
     Address currAddr;
     Date dob;
-    
 
 public:
     Applicant()
     {
         appID = 100;
         trn = 0;
-        name = "NotSet";
+        lname = "NotSet";
+        fname = "NotSet";
         emailAddr = "NotSet";
         contactnumber = 12232323;
     }
@@ -50,9 +51,13 @@ public:
         return contactnumber;
     }
 
-    string GetName()
+    string GetFname()
     {
-        return name;
+        return fname;
+    }
+    string GetLname()
+    {
+        return lname;
     }
     string GetEmailAddr()
     {
@@ -69,36 +74,16 @@ public:
         return dob;
     }
 
-    void SetTRn(istream &stream)
-    {
-        stream >> trn;
-    }
-
-    void SetName(istream &stream)
-    {
-        try
-        {
-            stream.ignore();
-            getline(stream, name, '\n');
-            if (name.length() > MaxStringSize)
-            {
-                throw runtime_error("Name should not exceed " + to_string(MaxStringSize) + " characters");
-            }
-        }
-        catch (runtime_error &e)
-        {
-            cerr << e.what() << endl;
-            SetName(cin);
-        }
-    }
-
     void CreateApplication()
     {
         cout << "Please Enter Appicants TRN" << endl;
-        SetTRn(cin);
+        cin >> trn;
 
-        cout << "Please Enter Applicant's Full Name" << endl;
-        SetName(cin);
+        cout << "Please Enter Applicant's First Name" << endl;
+        cin >> fname;
+
+        cout << "Please Enter Applicant's Last Name" << endl;
+        cin >> lname;
 
         cout << "Please Enter Applicant's Date of Birth" << endl;
         dob.SetDob();
@@ -118,7 +103,8 @@ public:
     {
         cout << "Applicant's Id: " << appID << endl;
         cout << "Applicant's TRN: " << trn << endl;
-        cout << "Applicant's Full Name: " << name << endl;
+        cout << "Applicant's first Name: " << fname << endl;
+        cout << "Applicant's last Name: " << lname << endl;
         cout << "Applicant's Email Address: " << emailAddr << endl;
         cout << "Applicant's Contact Number: " << contactnumber << endl;
         cout << "Applicant's Date of Birth: " << endl;
@@ -126,7 +112,6 @@ public:
         cout << "Applicant's Address" << endl;
         currAddr.Display();
         cout << "------------------" << endl;
-
     }
 
     void SaveApplication()
@@ -194,8 +179,6 @@ public:
             cerr << e.what() << endl;
         }
     }
-
-
 };
 
 // initialize static attribute

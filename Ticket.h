@@ -122,7 +122,7 @@ private:
 
         // Generates Ticket Report of Driver
         void viewTicketReport(){
-            cout << "Ticket Bumber: "<< ticketNumber << endl;
+            cout << "Ticket Number: "<< ticketNumber << endl;
             cout << "Issue Date: " << ticketIssueDate << endl;
             cout << "Offence Code: " <<ticketOffenceCode << endl;
             cout << "Offence dEscription: " <<ticketOffenceDescription << endl;

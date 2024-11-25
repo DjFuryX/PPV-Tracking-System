@@ -41,12 +41,12 @@ public:
 
     void SetAdrress()
     {
-        cout << "Street: ";
+        cout << "Street: "<<endl;
         cin >> street;
-        cout << "city: ";
+        cout << "city: "<<endl;
         cin >> city;
-        cout << "parish: ";
-        cin >> parish;
+        cout << "parish: "<<endl;
+        cin >> parish; 
     }
 
     void Display()
