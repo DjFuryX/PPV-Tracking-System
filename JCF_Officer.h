@@ -39,6 +39,48 @@ public:
     assignedStation = officer.assignedStation;
   }
 
+  //Setters
+   void setBadgeNumber(int bnum)
+    {
+      badgenumber = bnum;
+    }
+
+    void setFirstName(const string &fn)
+    {
+      firstname = fn;
+    }
+
+    void setLastName(const string &ln)
+    {
+      lastname = ln;
+    }
+
+    void setAssignedStation(const string &station)
+    {
+      assignedStation = station;
+    }
+
+     //Getters
+     int getBadgeNumber() const
+      {
+        return bnum;
+      }
+
+      string getFirstName() const
+      {
+         return fn;
+      }
+
+       string getLastName() const
+       {
+         return ln;
+       }
+
+       string getAssignedStation() const
+        {
+          return station;
+        }
+
   // Function for adding new ticket
   void AddTicket()
   {
