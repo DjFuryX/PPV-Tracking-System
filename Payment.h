@@ -34,12 +34,54 @@ class Payment{
           //copy constructor
           Payment (Payment &payment)
           {
-            badgenumber = jcf.badgenumber;
-            firstname = jcf.firstname;
-            lastname = jcf.lastname;
-            assignedStation = jcf.assignedStation;
+            PaymentID = payment.payid;
+            Payment_date = payment.paydate;
+            Payment_amount = payment.amount;
+            Ticket_number = payment.ticketnum;
           }
-           
+
+          //Setters
+          void setPaymentID (int payid)
+          {
+            PaymentID = payid;
+          }
+
+          void setPaymentDate (const string &paydate)
+          {
+             Payment_date = paydate;
+          }
+          
+          void setPaymentAmount (float amount)
+          {
+             Payment_amount = amount;
+          }
+
+          void TicketNumber (int ticketnum)
+          {
+            Ticket_number = ticketnum;
+          }
+
+          //Getters
+          int getPaymentID () const
+          {
+            return payid;
+          }
+
+          string getPaymentDate () const
+          {
+             return paydate;
+          }
+
+          float getPaymentAmount() const
+          {
+             return amount;
+          }
+
+          int getTicketNumber () const
+          {
+            return ticketnum;
+          }
+
           //Function for calculating payment amount
           void CalculatePayment()
           {
