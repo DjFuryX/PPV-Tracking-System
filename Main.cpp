@@ -1,7 +1,6 @@
 // Main function
 
 #include <iostream>
-#include "Applicant.h"
 #include "ProcessOfficer.h"
 using namespace std;
 
@@ -10,7 +9,7 @@ User *UserPtr;
 int main()
 {
 
-   int option = UserPtr->User::ShowMenu();// get user option
+   int option = UserPtr->User::ShowMenu();// get Main menu
 
     while (option != 0)
     { // Start while loop for main menu
@@ -36,9 +35,12 @@ int main()
             break;
         } // end switch case
 
+        if (UserPtr->Login()){
 
-        UserPtr->Login();
-        UserPtr->ShowMenu();
+         UserPtr->ShowMenu();
+
+        }
+     
 
 
         option = UserPtr->User::ShowMenu(); // get user option

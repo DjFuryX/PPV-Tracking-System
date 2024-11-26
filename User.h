@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 using namespace std;
 
 #define BCK "\x1b[1F"  // define line clear for console print
@@ -15,7 +16,33 @@ private:
     int password;
 
 public:
+    void setPassword(istream &stream)
+    {
+        try
+        {
+            stream.ignore();
+            cin >> password;
+            if (password > 0)
+            {
+                throw runtime_error("Name should not exceed  characters");
+            }
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
 
+    void setUserName(istream &stream)
+    {
+
+        stream.ignore();
+        getline(stream, username, '\n');
+        if (username.length() > 0)
+        {
+            throw runtime_error("Name should not exceed  characters");
+        }
+    }
 
     virtual int ShowMenu()
     {
@@ -34,11 +61,10 @@ public:
         cout << "\t\t +---------------------------------------------------------------------------------+" << endl;
         cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl; // prompts for user choice
         cin >> choice;
-
         system("cls");
         return choice;
         // clears the screen
     }
 
-    virtual void Login() = 0;
+    virtual bool Login() = 0;
 };

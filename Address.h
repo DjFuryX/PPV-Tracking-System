@@ -3,6 +3,9 @@
 #include <string.h>
 using namespace std;
 
+#ifndef Address_H
+#define Adress_H
+
 class Address
 {
 private:
@@ -59,6 +62,8 @@ public:
   
 
 };
+
+#endif
 
 // Overrides How the objects of this class are stored as string
 ostream &operator<<(ostream &out, Address &c)

@@ -2,6 +2,10 @@
 #include <time.h>
 using namespace std;
 
+
+#ifndef Date_H
+#define Date_H
+
 class Date
 {
 private:
@@ -72,6 +76,7 @@ public:
     }
 };
 
+#endif
 
 //Overrides How the objects of this class are stored as string
 ostream &operator<<(ostream &out, Date &c)
