@@ -15,7 +15,7 @@
             "environment": [],
             "externalConsole": true,
             "MIMode": "gdb",
-            "preLaunchTask":"C/C++: g++.exe build active file",
+            "preLaunchTask": "C/C++: g++.exe build active file",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
