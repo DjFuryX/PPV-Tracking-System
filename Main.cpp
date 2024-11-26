@@ -4,12 +4,19 @@
 #include "ProcessOfficer.h"
 using namespace std;
 
-User *UserPtr;
+
 
 int main()
 {
+    User *userPtr;
+    Applicant applicant;
 
-   int option = UserPtr->User::ShowMenu();// get Main menu
+    applicant.initialiseApplicantList();
+
+    cout << "Applications Saved: " << numApplicationSaved << endl;
+    system("pause");
+
+    int option = userPtr->User::ShowMenu(); // get user option
 
     while (option != 0)
     { // Start while loop for main menu
@@ -17,36 +24,24 @@ int main()
         switch (option)
         { // case structure is used to determine option selected
         case 1:
-            cout << "Provide service to Driver" << endl; // Provide Service to Driver
+            //  UserPtr = new Driver(); // Provide Service to Driver
 
             break;
         case 2:
-            cout << "Provide service to JCF Officer" << endl; // Provide Service to JCF officer
-            
+            //   UserPtr= new JCFOfficer();// Provide Service to JCF officeruser
 
             break;
         case 3:
-            UserPtr = new ProcessOfficer();
-           
-
+            userPtr = new ProcessOfficer(240, "Norman", "Ramble Police Station");
+            userPtr->Login();
             break;
         default: // if an invalid number is entered
             cout << "Invalid option chosen" << endl;
             break;
         } // end switch case
-
-        if (UserPtr->Login()){
-
-         UserPtr->ShowMenu();
-
-        }
-     
-
-
-        option = UserPtr->User::ShowMenu(); // get user option
+        system("pause");
+        option = userPtr->User::ShowMenu(); // get user option
     }
-    printf("\n\nGoodbye\nClosing application......."); // closing message
-    return 0;                                          // 0 indicates that the program terminated successfully
+    cout << "\n\nGoodbye\nClosing application......." << endl; // closing message
+    return 0;                                                  // 0 indicates that the program terminated successfully
 }
-
-

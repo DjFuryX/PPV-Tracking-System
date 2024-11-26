@@ -16,21 +16,22 @@ private:
     int password;
 
 public:
+
+    string getUserName(){
+        return username;
+    }
+
+    int getPassword(){
+        return password;
+    }
+
     void setPassword(istream &stream)
     {
-        try
-        {
-            stream.ignore();
-            cin >> password;
-            if (password > 0)
+            stream >> password;
+            if (password == 200) // change later
             {
                 throw runtime_error("Name should not exceed  characters");
-            }
-        }
-        catch (runtime_error &e)
-        {
-            cerr << e.what() << endl;
-        }
+            }   
     }
 
     void setUserName(istream &stream)
@@ -38,13 +39,14 @@ public:
 
         stream.ignore();
         getline(stream, username, '\n');
-        if (username.length() > 0)
+
+        if (username.length()==0) // change later
         {
             throw runtime_error("Name should not exceed  characters");
         }
     }
 
-    virtual int ShowMenu()
+    int ShowMenu()
     {
         int choice;
         // Get current date and time
@@ -66,5 +68,5 @@ public:
         // clears the screen
     }
 
-    virtual bool Login() = 0;
+    virtual void Login() = 0;
 };

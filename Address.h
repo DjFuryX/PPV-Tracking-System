@@ -4,7 +4,7 @@
 using namespace std;
 
 #ifndef Address_H
-#define Adress_H
+#define Address_H
 
 class Address
 {
@@ -59,11 +59,8 @@ public:
         cout << "parish: " << parish << endl;
     }
 
-  
 
 };
-
-#endif
 
 // Overrides How the objects of this class are stored as string
 ostream &operator<<(ostream &out, Address &c)
@@ -71,3 +68,6 @@ ostream &operator<<(ostream &out, Address &c)
     out << "Street: " << c.GetStreet() << "city: " << c.GetCity() << "parish: " << c.GetParish();
     return out;
 }
+
+#endif
+
