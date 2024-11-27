@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include "Auxillary.h"
 #include "Address.h"
 #include "Date.h"
 using namespace std;
@@ -22,9 +23,9 @@ protected:
     int trn;
     int appID;
     int contactnumber;
-    string denyReason;
-    string name;
-    string emailAddr;
+    char name[50];
+    char denyReason[50];
+    char emailAddr[50];
     Address currAddr;
     Date dob;
 
@@ -33,10 +34,10 @@ public:
     {
         appID = 100;
         trn = 0;
-        name = "NotSet";
-        emailAddr = "NotSet";
-        contactnumber = 12232323;
-        denyReason = "NotSet";
+        contactnumber = 0;
+        writeFixedLengthString(name, 50, "NotSet");
+        writeFixedLengthString(emailAddr, 50, "Notset");
+        writeFixedLengthString(denyReason, 50, "NotSet");
     }
 
     int getappID()
@@ -73,25 +74,49 @@ public:
         return dob;
     }
 
-    void CreateApplication()
+    void setTrn()
     {
         cout << "Please Enter Appicants TRN" << endl;
         cin >> trn;
+    }
 
+    void setName()
+    {
         cout << "Please Enter Applicant's Full Name" << endl;
-        cin >> name;
+        getInput(cin, name);
+    }
 
+    void setDob()
+    {
         cout << "Please Enter Applicant's Date of Birth" << endl;
         dob.SetDob();
-
+    }
+    void setAddress()
+    {
         cout << "Please Enter Applicant's Address" << endl;
         currAddr.SetAdrress();
+    }
 
+    void setEmailAddress()
+    {
         cout << "Please Enter Applicant's Email Address" << endl;
-        cin >> emailAddr;
+        getInput(cin, emailAddr);
+    }
 
+    void setContactNumber()
+    {
         cout << "Please Enter Applicant's Contact Number" << endl;
         cin >> contactnumber;
+    }
+
+    void CreateApplication()
+    {
+        setTrn();
+        setName();
+        setAddress();
+        setDob();
+        setEmailAddress();
+        setContactNumber();
 
         SaveApplication(appID + numApplicationSaved);
     }
@@ -120,7 +145,7 @@ public:
         cout << "Date: " << ctime(&timestamp) << endl; // print current date and time
         /*prints a menu so the user can select their desired choice*/
         cout << "\n\t\t +--------------------------------+ Application Menu +--------------------------------+" << endl;
-        cout << "\t\t | " CYN "1." RST "    Create Application                                                                    |" << endl;
+        cout << "\t\t | " CYN "1." RST "    Create Application                                                          |" << endl;
         cout << "\n\t\t | " CYN "2." RST "   Update Application                                                         |" << endl;
         cout << "\n\t\t | " CYN "3." RST "    Delete Application                                                        |" << endl;
         cout << "\n\t\t | " CYN "4." RST "    Reject Application                                                        |" << endl;
@@ -136,8 +161,9 @@ public:
 
     void applicantHandler()
     {
-
         int option = this->ShowMenu(); // get user option
+
+        Applicant *currApplicant = new Applicant();
 
         while (option != 0)
         { // Start while loop for main menu
@@ -145,25 +171,25 @@ public:
             switch (option)
             { // case structure is used to determine option selected
             case 1:
-                this->CreateApplication();
+                currApplicant->CreateApplication();
                 break;
             case 2:
 
                 break;
-
             default: // if an invalid number is entered
                 cout << "Invalid option chosen" << endl;
                 break;
             } // end switch case
+
+          
 
             system("pause");
             option = this->ShowMenu(); // get user option
         }
     }
 
-    int Findtrn()
+    int Findtrn(int searchQuery)
     {
-        int searchQuery;
 
         cout << "Please enter TRN: ";
         cin >> searchQuery;
@@ -192,39 +218,39 @@ public:
         }
     }
 
-    void SaveApplication(int id)
+    void SaveApplication(int appID)
     {
+
         try
         {
-            fstream file(filename, ios::out | ios::binary);
-            if (file.fail())
+            ofstream raFile(filename, ios::out | ios::binary);
+            if (raFile.fail())
             {
-                throw runtime_error("Exception: storing record");
+                throw runtime_error("cannot create database");
             }
-            file.seekp((id - OFFSET) * sizeof(*this));
-            file.write(reinterpret_cast<char *>(this), sizeof(*this));
-            cout << id - OFFSET << "-:TRN: " << this->trn << endl;
-            file.close();
+            raFile.seekp((appID - OFFSET) * sizeof(*this));
+            raFile.write(reinterpret_cast<const char *>(this), sizeof(*this));
+            raFile.close();
         }
-        catch (runtime_error &error)
+        catch (runtime_error &e)
         {
-            cerr << error.what() << endl;
+            cerr << e.what() << endl;
         }
     }
 
-    void retrieveApplication(int id)
+    void retrieveApplication(int idx)
     {
-
         try
         {
-            ifstream file(filename, ios::in | ios::binary);
-            if (file.fail())
+            fstream raFile(filename, ios::in | ios::binary);
+            if (raFile.fail())
             {
-                throw runtime_error("Exception: retrieving record");
+                throw runtime_error("cannot create database");
             }
-            file.seekg((id - OFFSET) * sizeof(*this));
-            file.read(reinterpret_cast<char *>(this), sizeof(*this));
-            file.close();
+
+            raFile.seekg((idx - OFFSET) * sizeof(*this));
+            raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+            raFile.close();
         }
         catch (runtime_error &e)
         {
@@ -236,46 +262,54 @@ public:
     {
         try
         {
-            ifstream file(filename, ios::in | ios::binary);
-
-            if (file.fail())
+            ifstream raFile(filename, ios::in | ios::binary);
+            if (raFile.fail())
             {
-                throw runtime_error("Database was Empty ");
+                throw runtime_error("cannot read database");
             }
             else
             {
-                for (int i = 0; i < MaxAppRecord; i++)
-                {
-                    // Temporary buffer to read applicant data
-                    Applicant tempRecord;              // Assuming your class has a struct or class for applicants
-                    file.seekg(i * sizeof(tempRecord)); // Adjust type here
-                    file.read(reinterpret_cast<char *>(&tempRecord), sizeof(tempRecord));
+                Applicant a1;
 
-                    if (tempRecord.trn != 0) // Check the record's TRN
+                for (int idx = 0; idx < MaxAppRecord; idx++)
+                {   
+                    raFile.seekg((idx) * sizeof(a1));
+                    raFile.read(reinterpret_cast<char *>(&a1), sizeof(a1));
+
+                    if (a1.trn != 0)
                     {
                         numApplicationSaved++;
-                        
-                        // Store the valid record in your list, e.g., applicantList[i] = tempRecord;
                     }
+                    a1.trn=0;
                 }
-                file.close();
             }
         }
         catch (runtime_error &e)
         {
             cerr << e.what() << endl;
+            createBlankRecords();
+        }
+    }
 
-            // If the database is empty, initialize it
-            ofstream file(filename, ios::out | ios::binary);
-
-            for (int i = 0; i < MaxAppRecord; i++)
+    void createBlankRecords()
+    {
+        try
+        {
+            ofstream raFile(filename, ios::out | ios::binary);
+            if (raFile.fail())
             {
-                // Write default ApplicantRecord to initialize the database
-                Applicant tempRecord; // Use a default constructor to initialize
-                file.seekp(i * sizeof(tempRecord));
-                file.write(reinterpret_cast<const char *>(&tempRecord), sizeof(tempRecord));
+                throw runtime_error("database cannot be created ");
+                for (int idx = 0; idx < MaxAppRecord; idx++)
+                {
+                    raFile.seekp((idx) * sizeof(*this));
+                    raFile.write(reinterpret_cast<const char *>(this), sizeof(*this));
+                }
             }
-            file.close();
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
         }
     }
 };

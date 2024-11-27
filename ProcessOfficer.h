@@ -1,7 +1,7 @@
 // ProcessOfficer Class
 #include "User.h"
 #include "Applicant.h"
-#include "Driver.h"
+//#include "Driver.h"
 
 #ifndef ProcessOfficer_H
 #define ProcessOfficer_H
@@ -57,8 +57,8 @@ public:
         if (officerName.compare(getUserName()) == 0 && getPassword() == officerId)
         {
 
-            cout << "Login successfull" << endl;
-           
+            cout << "Login successful" << endl;
+
             this->processOfficerHandler();
              system("pause");
         }
@@ -66,8 +66,7 @@ public:
 
     void processOfficerHandler()
     {
-        Applicant currApplicant;
-        Driver currDriver;
+        Applicant *currFunction;
 
         int option = this->ShowMenu(); // get user option
 
@@ -77,7 +76,7 @@ public:
             switch (option)
             { // case structure is used to determine option selected
             case 1:
-                currApplicant.applicantHandler();
+                currFunction->applicantHandler();
                 break;
             case 2:
 
@@ -87,7 +86,8 @@ public:
                 cout << "Invalid option chosen" << endl;
                 break;
             } // end switch case
-            
+
+
             system("pause");
             option = this->ShowMenu(); // get user option
         }

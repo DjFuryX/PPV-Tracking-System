@@ -1,13 +1,10 @@
 #include <iostream>
 #include <string>
+#include<time.h>
+#include"Auxillary.h"
 using namespace std;
 
-#define BCK "\x1b[1F"  // define line clear for console print
-#define CYN "\x1B[36m" // define colour yellow for console print
-#define YEL "\x1B[33m" // define colour yellow for console print
-#define RED "\x1B[31m" // define colour red for console print
-#define GRN "\x1B[32m" // define colour green for console print
-#define RST "\x1B[0m"  // define colour white for console print
+
 
 class User
 {
@@ -16,22 +13,23 @@ private:
     int password;
 
 public:
-
-    string getUserName(){
+    string getUserName()
+    {
         return username;
     }
 
-    int getPassword(){
+    int getPassword()
+    {
         return password;
     }
 
     void setPassword(istream &stream)
     {
-            stream >> password;
-            if (password == 200) // change later
-            {
-                throw runtime_error("Name should not exceed  characters");
-            }   
+        stream >> password;
+        if (password == 200) // change later
+        {
+            throw runtime_error("Name should not exceed  characters");
+        }
     }
 
     void setUserName(istream &stream)
@@ -40,7 +38,7 @@ public:
         stream.ignore();
         getline(stream, username, '\n');
 
-        if (username.length()==0) // change later
+        if (username.length() == 0) // change later
         {
             throw runtime_error("Name should not exceed  characters");
         }

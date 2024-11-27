@@ -1,6 +1,7 @@
 // Driver Class
 #include <iostream>
 #include <string.h>
+#include "Auxillary.h"
 using namespace std;
 
 #ifndef Address_H
@@ -9,23 +10,24 @@ using namespace std;
 class Address
 {
 private:
-    string street;
-    string city;
-    string parish;
+    char street[50];
+    char city[50];
+    char parish[50];
 public:
     Address()
     {
-        street = "Notset";
-        city = "Notset";
-        parish = "NotSet";
+        writeFixedLengthString(street,50,"notSet");
+        writeFixedLengthString(city,50,"notSet");
+        writeFixedLengthString(parish,50,"notSet");
+
     }
 
-    Address(string street, string city, string parish)
+     Address(string newStreet, string newCity, string newParish)
     {
-        this->street = street;
-        this->city = city;
-        this->parish = parish;
-    }
+       writeFixedLengthString(street,50,newStreet);
+       writeFixedLengthString(city,50,newCity);
+       writeFixedLengthString(parish,50,newParish);
+    } 
 
     string GetStreet()
     {
@@ -42,14 +44,28 @@ public:
         return parish;
     }
 
+    void setStreet(){
+
+        cout << "Street: "<<endl;
+        getInput(cin,street);
+    }
+
+    void setCity(){
+
+        cout << "city: "<<endl;
+        getInput(cin,city);
+    }
+
+    void setParish(){
+        cout << "parish: "<<endl;
+        getInput(cin,parish); 
+    }
+
     void SetAdrress()
     {
-        cout << "Street: "<<endl;
-        cin >> street;
-        cout << "city: "<<endl;
-        cin >> city;
-        cout << "parish: "<<endl;
-        cin >> parish; 
+        setStreet();
+        setCity();
+        setParish();
     }
 
     void Display()
@@ -58,16 +74,6 @@ public:
         cout << "city: " << city << endl;
         cout << "parish: " << parish << endl;
     }
-
-
 };
-
-// Overrides How the objects of this class are stored as string
-ostream &operator<<(ostream &out, Address &c)
-{
-    out << "Street: " << c.GetStreet() << "city: " << c.GetCity() << "parish: " << c.GetParish();
-    return out;
-}
-
 #endif
 

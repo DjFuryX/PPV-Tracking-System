@@ -2,10 +2,10 @@
 
 #include <vector>
 #include "Ticket.h"
-#include "Applicant.h"
+
 using namespace std;
 
-class Driver:public Applicant
+class Driver//:public Applicant
 {
 
 private:

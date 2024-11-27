@@ -30,11 +30,11 @@ public:
 
     void SetDob()
     {
-        cout << "day: ";
+        cout << "day: "<<endl;
         cin >> day;
-        cout << "month: ";
+        cout << "month: "<<endl;
         cin >> month;
-        cout << "year: ";
+        cout << "year: "<<endl;
         cin >> year;
     }
 

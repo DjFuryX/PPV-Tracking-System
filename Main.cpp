@@ -4,16 +4,14 @@
 #include "ProcessOfficer.h"
 using namespace std;
 
-
-
 int main()
 {
     User *userPtr;
-    Applicant applicant;
-
-    applicant.initialiseApplicantList();
-
+    Applicant *applicant=new Applicant();
+    applicant->initialiseApplicantList();
+    
     cout << "Applications Saved: " << numApplicationSaved << endl;
+
     system("pause");
 
     int option = userPtr->User::ShowMenu(); // get user option
