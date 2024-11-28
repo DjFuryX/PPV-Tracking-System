@@ -10,10 +10,9 @@ using namespace std;
 #ifndef Applicant_H
 #define Applicant_H
 
-string filename = "ApplicationList.dat";
 int OFFSET = 100;
-
 const int MaxAppRecord = 500;
+const string filename = "ApplicationList.dat";
 int numApplicationSaved = 0;
 const int maxStringsize = 50;
 
@@ -145,8 +144,8 @@ public:
         setTrn();
         setName();
         setDob();
-        setAddress();
         setContactNumber();
+        setAddress();
         setEmailAddress();
         cout << "Did the driver cause any accident(s) within the last two years?\n Y/N: " << endl;
         recentAccident = setQualification(cin);
@@ -181,46 +180,38 @@ public:
     void DeleteApplication()
     {
         int Userinput;
-        Applicant a1;
         cout << "Enter the Applicants Tax Registration Number: " << endl;
         cin >> Userinput;
 
-        int foundAppID = findTrn(Userinput);
-        if (foundAppID == -1)
+        int key = findTrn(Userinput);
+
+        Applicant record;                             
+        bool was_removed = false;             // was at least one record removed
+        ifstream fin(filename, ios::binary);       // open file in binary mode for reading
+        ofstream fout("tmp_record.dat", ios::binary); // create temporary file to write records that should not be deleted to it, and then replace files
+        while (fin.read((char *)&record, sizeof(Applicant)))
         {
-            cout << "User not Found" << endl;
+            if (record.appID != key)
+            {                                                 // if the record does not match
+                fout.write((const char *)&record, sizeof(Applicant)); // write the value to the temporary file
+            }
+            else
+            {
+                was_removed = true; // the record was removed
+            }
+        }
+        if (!was_removed)
+        {                                                                 // if nothing was deleted
+            cout << "No records with key '" << key << "' found." << endl; // inform the user
         }
         else
         {
-
-            cout << "User found at ID:" << foundAppID << endl;
-            try
-            {
-
-                fstream raFile(filename, ios::out | ios::in | ios::binary);
-                if (raFile.fail())
-                {
-                    throw runtime_error("cannot open database");
-                }
-                raFile.close();
-
-                for (int idx = foundAppID - OFFSET; idx < numApplicationSaved; idx++)
-                {
-                    // read record ahead
-                    retrieveApplication(foundAppID + 1);
-                    // overwrite current position
-                    SaveApplication(foundAppID);
-                    cout << "*";
-                }
-                cout << endl;
-                numApplicationSaved--;
-                cout << "Applicant " << Userinput << " Deleted" << endl;
-            }
-            catch (runtime_error &e)
-            {
-                cout << "Error: " << e.what() << endl;
-            }
+            cout << "Records with key '" << key << "' have been deleted." << endl; // inform the user of successful deletion
         }
+        fin.close();                    // close the input file
+        fout.close();                   // close the output file
+        remove(filename.c_str());                   // delete the old main file
+        rename("tmp_record.dat", filename.c_str()); // rename the temporary file to the main one
     }
 
     void Display()
@@ -368,7 +359,7 @@ public:
                 if (this->trn == searchQuery)
                 {
                     foundIndex = appID;
-                    retrieveApplication(i);
+                    // retrieveApplication(i);
                     break;
                 }
             }
@@ -394,7 +385,6 @@ public:
             }
             raFile.seekp((appID - OFFSET) * sizeof(*this));
             raFile.write(reinterpret_cast<const char *>(this), sizeof(*this));
-
             raFile.close();
         }
         catch (runtime_error &e)
@@ -404,22 +394,25 @@ public:
     }
 
     void retrieveApplication(int idx)
-    { 
+    {
         try
         {
             fstream raFile(filename, ios::in | ios::binary);
             if (raFile.fail())
             {
-                throw runtime_error("cannot create database");
+                throw runtime_error("cannot retrieve record");
             }
 
             raFile.seekg((idx - OFFSET) * sizeof(*this));
             raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
-            if (raFile){
-                cout << "all characters read successfully."<<endl;
+
+            if (raFile)
+            {
+                cout << "all characters read successfully." << endl;
             }
-            else{
-                 cout<< "error: only " << raFile.gcount() << " could be read"<<endl;
+            else
+            {
+                cout << "error: only " << raFile.gcount() << " could be read" << endl;
             }
             raFile.close();
         }
