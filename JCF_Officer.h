@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <cstdlib>
+#include <iomanip>
 #include "Auxillary.h"
 #include "User.h" 
 using namespace std;
