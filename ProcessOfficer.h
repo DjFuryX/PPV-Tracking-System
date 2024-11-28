@@ -36,13 +36,15 @@ public:
         {
             cout << "Name: " << officerName << endl;
             cout << "Password: " << officerId << endl;
-            cout << "\n\t\t +--------------------------------+ Process Officer Login +--------------------------------+\n"
-                 << endl;
+            cout << "\n\t\t +--------------------------------+ Process Officer Login +--------------------------------+\n"<< endl;
             cout << "\t\t" << msg << endl;
             cout << "\t\tPlease enter Username:\t";
             setUserName(cin);
+            
             cout << "\t\tPlease enter Password\t";
             setPassword(cin);
+
+        
         }
 
         catch (runtime_error &e)

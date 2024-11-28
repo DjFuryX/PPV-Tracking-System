@@ -9,7 +9,7 @@ using namespace std;
 class User
 {
 private:
-    string username;
+    char username[50];
     int password;
 
 public:
@@ -25,23 +25,12 @@ public:
 
     void setPassword(istream &stream)
     {
-        stream >> password;
-        if (password == 200) // change later
-        {
-            throw runtime_error("Name should not exceed  characters");
-        }
+       cin>>password;
     }
 
     void setUserName(istream &stream)
     {
-
-        stream.ignore();
-        getline(stream, username, '\n');
-
-        if (username.length() == 0) // change later
-        {
-            throw runtime_error("Name should not exceed  characters");
-        }
+        getInput(cin,username);
     }
 
     int ShowMenu()

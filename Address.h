@@ -16,17 +16,17 @@ private:
 public:
     Address()
     {
-        writeFixedLengthString(street,50,"notSet");
-        writeFixedLengthString(city,50,"notSet");
-        writeFixedLengthString(parish,50,"notSet");
+        writeFixedLengthString(street,"notSet");
+        writeFixedLengthString(city,"notSet");
+        writeFixedLengthString(parish,"notSet");
 
     }
 
      Address(string newStreet, string newCity, string newParish)
     {
-       writeFixedLengthString(street,50,newStreet);
-       writeFixedLengthString(city,50,newCity);
-       writeFixedLengthString(parish,50,newParish);
+       writeFixedLengthString(street,newStreet);
+       writeFixedLengthString(city,newCity);
+       writeFixedLengthString(parish,newParish);
     } 
 
     string GetStreet()
@@ -48,17 +48,20 @@ public:
 
         cout << "Street: "<<endl;
         getInput(cin,street);
+
     }
 
     void setCity(){
 
         cout << "city: "<<endl;
         getInput(cin,city);
+
     }
 
     void setParish(){
         cout << "parish: "<<endl;
         getInput(cin,parish); 
+        
     }
 
     void SetAdrress()

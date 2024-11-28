@@ -12,8 +12,9 @@ using namespace std;
 #define GRN "\x1B[32m" // define colour green for console print
 #define RST "\x1B[0m"  // define colour white for console print
 
-void writeFixedLengthString(char attribute[], unsigned int maxLength, string value)
+void writeFixedLengthString(char attribute[], string value)
 {
+    unsigned int maxLength=50;
     unsigned int idx, length;
 
     length = (value.length() > maxLength) ? (maxLength - 1) : value.length();
@@ -28,11 +29,9 @@ void writeFixedLengthString(char attribute[], unsigned int maxLength, string val
 void getInput(istream &stream, char uservalue[])
 {
     string userInput;
-
     stream.ignore();
-    getline(stream, userInput, '\n');
-
-    writeFixedLengthString(uservalue,50,userInput);
+    getline(stream, userInput,'\n');
+    writeFixedLengthString(uservalue,userInput);
 }
 
 #endif

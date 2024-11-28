@@ -9,7 +9,9 @@ int main()
     User *userPtr;
     Applicant *applicant=new Applicant();
     applicant->initialiseApplicantList();
-    
+    applicant->retrieveApplication(100);
+    applicant->Display();
+
     cout << "Applications Saved: " << numApplicationSaved << endl;
 
     system("pause");

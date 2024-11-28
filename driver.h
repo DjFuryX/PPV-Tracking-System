@@ -1,11 +1,13 @@
 // Driver Class
 
 #include <vector>
+#include "Applicant.h"
+#include "User.h"
 #include "Ticket.h"
 
 using namespace std;
 
-class Driver//:public Applicant
+class Driver:public Applicant,public User
 {
 
 private:
