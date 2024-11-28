@@ -1,5 +1,6 @@
 // Driver Class
 #include <stdexcept>  
+#include <iostream>
 #include <string>
 #include <vector>
 #include "Applicant.h"
