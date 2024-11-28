@@ -35,4 +35,6 @@ void getInput(istream &stream, char uservalue[])
     writeFixedLengthString(uservalue,userInput);
 }
 
+
+
 #endif

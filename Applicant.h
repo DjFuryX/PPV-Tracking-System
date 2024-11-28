@@ -144,10 +144,10 @@ public:
     {
         setTrn();
         setName();
-        setAddress();
         setDob();
-        setEmailAddress();
+        setAddress();
         setContactNumber();
+        setEmailAddress();
         cout << "Did the driver cause any accident(s) within the last two years?\n Y/N: " << endl;
         recentAccident = setQualification(cin);
         cout << "Does the driver have a negative police record?\n Y/N: " << endl;
@@ -185,15 +185,15 @@ public:
         cout << "Enter the Applicants Tax Registration Number: " << endl;
         cin >> Userinput;
 
-        int index = findTrn(Userinput);
-        if (index == -1)
+        int foundAppID = findTrn(Userinput);
+        if (foundAppID == -1)
         {
             cout << "User not Found" << endl;
         }
         else
         {
-            
-            cout << "User found at index:" << index<< endl;
+
+            cout << "User found at ID:" << foundAppID << endl;
             try
             {
 
@@ -204,12 +204,12 @@ public:
                 }
                 raFile.close();
 
-                for (int idx = index; idx <= numApplicationSaved - 1; idx++)
+                for (int idx = foundAppID - OFFSET; idx < numApplicationSaved; idx++)
                 {
                     // read record ahead
-                    this->retrieveApplication(idx + 101);
+                    retrieveApplication(foundAppID + 1);
                     // overwrite current position
-                    this->SaveApplication(idx+100);
+                    SaveApplication(foundAppID);
                     cout << "*";
                 }
                 cout << endl;
@@ -367,7 +367,7 @@ public:
                 file.read(reinterpret_cast<char *>(this), sizeof(*this));
                 if (this->trn == searchQuery)
                 {
-                    foundIndex = i;
+                    foundIndex = appID;
                     retrieveApplication(i);
                     break;
                 }
@@ -386,13 +386,15 @@ public:
 
         try
         {
-            ofstream raFile(filename, ios::binary | ios::app);
+            // ofstream raFile(filename, ios::binary | ios::app);
+            ofstream raFile(filename, ios::binary | ios::in);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");
             }
             raFile.seekp((appID - OFFSET) * sizeof(*this));
             raFile.write(reinterpret_cast<const char *>(this), sizeof(*this));
+
             raFile.close();
         }
         catch (runtime_error &e)
@@ -402,7 +404,7 @@ public:
     }
 
     void retrieveApplication(int idx)
-    {
+    { 
         try
         {
             fstream raFile(filename, ios::in | ios::binary);
@@ -413,7 +415,12 @@ public:
 
             raFile.seekg((idx - OFFSET) * sizeof(*this));
             raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
-
+            if (raFile){
+                cout << "all characters read successfully."<<endl;
+            }
+            else{
+                 cout<< "error: only " << raFile.gcount() << " could be read"<<endl;
+            }
             raFile.close();
         }
         catch (runtime_error &e)
@@ -446,6 +453,7 @@ public:
                     }
                     a1.trn = 0;
                 }
+                raFile.close();
             }
         }
         catch (runtime_error &e)
