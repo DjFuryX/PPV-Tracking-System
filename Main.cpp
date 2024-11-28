@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "ProcessOfficer.h"
+#include"User.h"
 using namespace std;
 
 int main()
@@ -9,12 +10,6 @@ int main()
     User *userPtr;
     Applicant *applicant=new Applicant();
     applicant->initialiseApplicantList();
-    cout << "Applications Saved: " << numApplicationSaved << endl;
-   // applicant->retrieveApplication(100);
-    applicant->DeleteApplication();
-    applicant->Display();
-   
-
     cout << "Applications Saved: " << numApplicationSaved << endl;
 
     system("pause");

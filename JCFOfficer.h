@@ -2,10 +2,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "Ticket.h"
 #include <cstdlib>
 #include <iomanip>
 #include "Auxillary.h"
-#include "User.h" 
+#include "User.h"
 using namespace std;
 
 class JCFOfficer : public User
@@ -23,326 +24,302 @@ public:
     badgenumber = 0;
     writeFixedLengthString(firstname, "NameNotSet");
     writeFixedLengthString(lastname, "NameNotSet");
-    writeFixedLengthString(assignedStation,"StationNot set");
+    writeFixedLengthString(assignedStation, "StationNot set");
   }
 
   // primary constructor
   JCFOfficer(int bnum, string fn, string ln, string station)
-    {
-        badgenumber = bnum;
-        writeFixedLengthString(firstname,fn);
-        writeFixedLengthString(lastname,ln);
-        writeFixedLengthString(assignedStation,station);
-    }
+  {
+    badgenumber = bnum;
+    writeFixedLengthString(firstname, fn);
+    writeFixedLengthString(lastname, ln);
+    writeFixedLengthString(assignedStation, station);
+  }
 
   // copy constructor
   JCFOfficer(JCFOfficer &officer)
   {
     badgenumber = officer.badgenumber;
-     writeFixedLengthString(firstname,officer.firstname);
-     writeFixedLengthString(lastname,officer.lastname);
-     writeFixedLengthString(assignedStation,officer.assignedStation);
+    writeFixedLengthString(firstname, officer.firstname);
+    writeFixedLengthString(lastname, officer.lastname);
+    writeFixedLengthString(assignedStation, officer.assignedStation);
   }
 
   // Login function
-    void Login() override
+  void Login() override
+  {
+    try
     {
-        try
-        {
-            // Display JCF Officers login
-            cout << "\n\t\t +----------------------------+ JCF Officer Login +----------------------------+\n" << endl;
-            cout << "\t\tPlease enter Badge Number:\t";
-            int enteredBadgeNumber;
-            cin >> enteredBadgeNumber;  // Input the badge number
+      // Display JCF Officers login
+      cout << "\n\t\t +----------------------------+ JCF Officer Login +----------------------------+\n"
+           << endl;
+      cout << "\t\tPlease enter Badge Number:\t";
+      int enteredBadgeNumber;
+      cin >> enteredBadgeNumber; // Input the badge number
 
-            cout << "\t\tPlease enter Password:\t";
-            int enteredPassword;  // Password as integer
-            cin >> enteredPassword;   // Input the password
+      cout << "\t\tPlease enter Password:\t";
+      int enteredPassword;    // Password as integer
+      cin >> enteredPassword; // Input the password
 
-            if (enteredBadgeNumber <= 0 || enteredPassword <= 0)
-            {
-                throw runtime_error("Invalid badge number or password. Please try again.");
-            }
+      if (enteredBadgeNumber <= 0 || enteredPassword <= 0)
+      {
+        throw runtime_error("Invalid badge number or password. Please try again.");
+      }
 
-            // Check if entered badge number and password are correct
-            if (enteredBadgeNumber == badgenumber && enteredPassword == getPassword())
-            {
-                cout << "Login successful! Welcome, JCF Officer " << firstname << " " << lastname << "." << endl;
-                this->processOfficerHandler();
-                system("pause");
-            }
-            else
-            {
-                cout << "Invalid badge number or password. Please try again." << endl;
-                system("pause");
-            }
-        }
-        catch (runtime_error &e)
-        {
-            cerr << e.what() << endl;
-            system("cls");
-            this->Login();  // Recursively retry login on error
-        }
+      // Check if entered badge number and password are correct
+      if (enteredBadgeNumber == badgenumber && enteredPassword == getPassword())
+      {
+        cout << "Login successful! Welcome, JCF Officer " << firstname << " " << lastname << "." << endl;
+        this->processOfficerHandler();
+        system("pause");
+      }
+      else
+      {
+        cout << "Invalid badge number or password. Please try again." << endl;
+        system("pause");
+      }
     }
-
-
-
-   // Setters
-    void setBadgeNumber(int bnum)
+    catch (runtime_error &e)
     {
-        if (bnum > 0)
-        {
-            badgenumber = bnum;
-        }
-        else
-        {
-            cout << "Badge number must be greater than 0. Please re-enter a valid number" << endl;
-        }
+      cerr << e.what() << endl;
+      system("cls");
+      this->Login(); // Recursively retry login on error
     }
-    
-    // copy at most 35 characters from string to firstname
+  }
+
+  // Setters
+  void setBadgeNumber(int bnum)
+  {
+    if (bnum > 0)
+    {
+      badgenumber = bnum;
+    }
+    else
+    {
+      cout << "Badge number must be greater than 0. Please re-enter a valid number" << endl;
+    }
+  }
+
+  // copy at most 35 characters from string to firstname
   void setFirstName(const string &fnString)
-    {
-        size_t length = fnString.size();
-        length = (length < 35 ? length : 34);
-        fnString.copy(firstname, length);
-        firstname[length] = '\0';  // Null-terminate the string
-    }
+  {
+    size_t length = fnString.size();
+    length = (length < 35 ? length : 34);
+    fnString.copy(firstname, length);
+    firstname[length] = '\0'; // Null-terminate the string
+  }
 
   void setLastName(const string &lnString)
   {
     // copy at most 35 characters from string to lastname
     size_t length = lnString.size();
-      length = (length < 35 ? length : 34);
-      lnString.copy(lastname, length);
-      lastname[length] = '\0'; // append null character to firstname
+    length = (length < 35 ? length : 34);
+    lnString.copy(lastname, length);
+    lastname[length] = '\0'; // append null character to firstname
   }
 
   void setAssignedStation(const string &station)
   {
-    writeFixedLengthString(assignedStation,station);
+    writeFixedLengthString(assignedStation, station);
   }
 
-
   // Add ticket method
-    void AddTicket() {
-        ofstream outTicket{"NewTicket.dat", ios::out};
-        if (!outTicket) {
-          cerr << "Error opening file. Please try again later." << endl;
-          return;  // Gracefully exit the function without crashing the entire system.
-        }
-        int ticketnumber;
-        cout << "Enter new ticket number (1 to 100, 0 to end input): ";
-        cin >> ticketnumber;
-
-        while (ticketnumber > 0 && ticketnumber <= 100) {
-            Ticket newTicket;  // Create object for Ticket class
-
-            // Enter ticket details
-            string issueDate, offenceCode, offenceDesc, plateNumber, dueDate, courtDate, issuingOfficer, courtLocation;
-            float amount;
-
-            cout << "Enter ticket issue date (YYYY-MM-DD): ";
-            cin >> issueDate;
-            cout << "Enter offence code: ";
-            cin >> offenceCode;
-            cout << "Enter offence description: ";
-            cin.ignore();  
-            getline(cin, offenceDesc);
-            cout << "Enter license plate number: ";
-            cin >> plateNumber;
-            cout << "Enter ticket amount: $";
-            cin >> amount;
-            cout << "Enter due date (YYYY-MM-DD): ";
-            cin >> dueDate;
-            cout << "Enter court date (YYYY-MM-DD): ";
-            cin >> courtDate;
-            cout << "Enter issuing officer's name: ";
-            cin.ignore();  
-            getline(cin, issuingOfficer);
-            cout << "Enter court location: ";
-            getline(cin, courtLocation);
-
-            newTicket.setTicketNumber(ticketnumber);
-            newTicket.setTicketIssueDate(issueDate);
-            newTicket.setTicketOffenceCode(offenceCode);
-            newTicket.setTicketOffenceDescription(offenceDesc);
-            newTicket.setLicensePlateNumber(plateNumber);
-            newTicket.setTicketAmount(amount);
-            newTicket.setDueDate(dueDate);
-            newTicket.setCourtDate(courtDate);
-            newTicket.setIssuingOfficer(issuingOfficer);
-            newTicket.setCourtLocation(courtLocation);
-
-            outTicket.write(reinterpret_cast<const char*>(&newTicket), sizeof(Ticket));
-            cout << "Ticket added successfully!" << endl;
-
-            cout << "Enter new ticket number (1 to 100, 0 to end input): ";
-            cin >> ticketnumber;
-        }
-
-        outTicket.close();
-    }
-
-    // Function to view tickets that are due
-    void ViewTicketsDue()
-    {  
-        cout << "Viewing tickets that are due..." << endl;
-    }
-
-    // Function to view all tickets
-    void ViewTickets()
+  void AddTicket()
+  {
+    ofstream outTicket{"NewTicket.dat", ios::out};
+    if (!outTicket)
     {
-        
-        cout << "Viewing all tickets..." << endl;
+      cerr << "Error opening file. Please try again later." << endl;
+      return; // Gracefully exit the function without crashing the entire system.
     }
+    int ticketnumber;
+    cout << "Enter new ticket number (1 to 100, 0 to end input): ";
+    cin >> ticketnumber;
 
-    // Function to view outstanding tickets from drivers in each parish
-    void TicketsParish()
+    while (ticketnumber > 0 && ticketnumber <= 100)
     {
-        
-        cout << "Viewing outstanding tickets in each parish..." << endl;
+      Ticket newTicket; // Create object for Ticket class
+
+      // Enter ticket details
+      string issueDate, offenceCode, offenceDesc, plateNumber, dueDate, courtDate, issuingOfficer, courtLocation;
+      float amount;
+
+      cout << "Enter ticket issue date (YYYY-MM-DD): ";
+      cin >> issueDate;
+      cout << "Enter offence code: ";
+      cin >> offenceCode;
+      cout << "Enter offence description: ";
+      cin.ignore();
+      getline(cin, offenceDesc);
+      cout << "Enter license plate number: ";
+      cin >> plateNumber;
+      cout << "Enter ticket amount: $";
+      cin >> amount;
+      cout << "Enter due date (YYYY-MM-DD): ";
+      cin >> dueDate;
+      cout << "Enter court date (YYYY-MM-DD): ";
+      cin >> courtDate;
+      cout << "Enter issuing officer's name: ";
+      cin.ignore();
+      getline(cin, issuingOfficer);
+      cout << "Enter court location: ";
+      getline(cin, courtLocation);
+
+      newTicket.setTicketNumber(ticketnumber);
+      newTicket.setTicketIssueDate(issueDate);
+      newTicket.setTicketOffenceCode(offenceCode);
+      newTicket.setTicketOffenceDescription(offenceDesc);
+      newTicket.setLicensePlateNumber(plateNumber);
+      newTicket.setTicketAmount(amount);
+      newTicket.setDueDate(dueDate);
+      newTicket.setCourtDate(courtDate);
+      newTicket.setIssuingOfficer(issuingOfficer);
+      newTicket.setCourtLocation(courtLocation);
+
+      outTicket.write(reinterpret_cast<const char *>(&newTicket), sizeof(Ticket));
+      cout << "Ticket added successfully!" << endl;
+
+      cout << "Enter new ticket number (1 to 100, 0 to end input): ";
+      cin >> ticketnumber;
     }
 
-    // Function to update a ticket
-    void updateTicket()
+    outTicket.close();
+  }
+
+  // Function to view tickets that are due
+  void ViewTicketsDue()
+  {
+    cout << "Viewing tickets that are due..." << endl;
+  }
+
+  // Function to view all tickets
+  void ViewTickets()
+  {
+
+    cout << "Viewing all tickets..." << endl;
+  }
+
+  // Function to view outstanding tickets from drivers in each parish
+  void TicketsParish()
+  {
+
+    cout << "Viewing outstanding tickets in each parish..." << endl;
+  }
+
+  // Function to update a ticket
+  void updateTicket()
+  {
+    cout << "Updating ticket..." << endl;
+
+    // obtain the ticket number for ticket update
+    int ticketnumber{getTicketNumber("Enter Ticket Number:")};
+
+    // move file-position pointer to correct ticket record to file
     {
-        cout << "Updating ticket..." << endl;
-
-        //obtain the ticket number for ticket update
-             int ticketnumber{getTicketNumber("Enter Ticket Number:")};
-             
-             //move file-position pointer to correct ticket record to file
-             {
-              updateFile.seekg((ticketnumber - 1) * sizeof(Ticket));
-             }
-
-             //create record object and read first record from file
-             Ticket newTicket;
-             updateFile.read(reinterpret_cast<char*>(&newTicket), sizeof(Ticket));
-
-             //update ticket record
-             if(newTicket.getTicketNumber() != 0)
-             {
-               outputLine(cout, newTicket); // display the ticket record
-
-               //request the officer to enter new data to display updated ticket report
-                cout << "Enter ticket issue date (YYYY-MM-DD): "
-                cin >> issueDate;
-
-                cout << "Enter offence code: "
-                cin >> offenceCode;
-
-                cout << "Enter offence description: "
-                cin.ignore();  
-                getline(cin, offenceDesc);
-
-               cout << "Enter license plate number: " 
-               cin >> plateNumber;
-
-               cout << "Enter ticket amount: $"
-               cin >> amount;
-
-               cout << "Enter due date (YYYY-MM-DD): "
-               cin >> dueDate;
-
-               cout << "Enter court date (YYYY-MM-DD): "
-               cin >> courtDate;
-
-               cout << "Enter issuing officer's name: "
-               cin.ignore();  
-               getline(cin, issuingOfficer);
-
-               cout << "Enter court location: "
-               getline(cin, courtLocation);
-
-            newTicket.setTicketNumber(ticketnumber);
-            newTicket.setTicketIssueDate(issueDate);
-            newTicket.setTicketOffenceCode(offenceCode);
-            newTicket.setTicketOffenceDescription(offenceDesc);
-            newTicket.setLicensePlateNumber(plateNumber);
-            newTicket.setTicketAmount(amount);
-            newTicket.setDueDate(dueDate);
-            newTicket.setCourtDate(courtDate);
-            newTicket.setIssuingOfficer(issuingOfficer);
-            newTicket.setCourtLocation(courtLocation);
-
-             //move file-position pointer to correct ticket record in file
-             {
-              updateFile.seekp((ticketnumber - 1) * sizeof(Ticket));
-             }
-
-              //write updated record over old record in file
-              updateFile.write(reinterpret_cast<const_cast*>(&newTicket), sizeof(Ticket));
-              cout << "Ticket updated successfully!" << endl;
-
-            }
-            else
-            {
-              //display error if ticket does not show up
-              cerr <<"Ticket Number: "<< ticketnumber <<"has no information." << endl
-            }
-          }
+      updateFile.seekg((ticketnumber - 1) * sizeof(Ticket));
     }
 
-    // Function to view Warrant details of each driver
-    void CheckWarrantStatus()
+    // create record object and read first record from file
+    Ticket newTicket;
+    updateFile.read(reinterpret_cast<char *>(&newTicket), sizeof(Ticket));
+
+    // update ticket record
+    if (newTicket.getTicketNumber() != 0)
     {
-       
-        cout << "Checking warrant status..." << endl;
-    }
+      outputLine(cout, newTicket); // display the ticket record
 
-    void deleteTicket()
+      // request the officer to enter new data to display updated ticket report
+      cout << "Enter ticket issue date (YYYY-MM-DD): " cin >> issueDate;
+
+      cout << "Enter offence code: " cin >> offenceCode;
+
+      cout << "Enter offence description: " cin.ignore();
+      getline(cin, offenceDesc);
+
+      cout << "Enter license plate number: " cin >> plateNumber;
+
+      cout << "Enter ticket amount: $" cin >> amount;
+
+      cout << "Enter due date (YYYY-MM-DD): " cin >> dueDate;
+
+      cout << "Enter court date (YYYY-MM-DD): " cin >> courtDate;
+
+      cout << "Enter issuing officer's name: " cin.ignore();
+      getline(cin, issuingOfficer);
+
+      cout << "Enter court location: " getline(cin, courtLocation);
+
+      newTicket.setTicketNumber(ticketnumber);
+      newTicket.setTicketIssueDate(issueDate);
+      newTicket.setTicketOffenceCode(offenceCode);
+      newTicket.setTicketOffenceDescription(offenceDesc);
+      newTicket.setLicensePlateNumber(plateNumber);
+      newTicket.setTicketAmount(amount);
+      newTicket.setDueDate(dueDate);
+      newTicket.setCourtDate(courtDate);
+      newTicket.setIssuingOfficer(issuingOfficer);
+      newTicket.setCourtLocation(courtLocation);
+
+      // move file-position pointer to correct ticket record in file
+      {
+        updateFile.seekp((ticketnumber - 1) * sizeof(Ticket));
+      }
+
+      // write updated record over old record in file
+      updateFile.write(reinterpret_cast<const_cast *>(&newTicket), sizeof(Ticket));
+      cout << "Ticket updated successfully!" << endl;
+    }
+    else
     {
-             //obtain the ticket number for ticket update
-             int ticketnumber{getTicketNumber("Enter Ticket to delete:")};
-             
-             //move file-position pointer to correct ticket record to file
-             {
-              deleteFromFile.seekg((ticketnumber - 1) * sizeof(Ticket));
-             }
-
-              //create record object and read first record from file
-             Ticket newTicket;
-             deleteFromFile.read(reinterpret_cast<char*>(&newTicket), sizeof(Ticket));
-
-             //delete record, if record exists in file
-             if(newTicket.getTicketNumber() != 0)
-             {
-                Ticket blankticket; //create blank record
-                //move file-position pointer to correct ticket record in file
-                {
-                  deleteFromFile.seekp((ticketnumber - 1) * sizeof(Ticket));
-                }
-                 //replacing existing ticket record with blank record
-                 updateFile.write(reinterpret_cast<const_cast*>(&newTicket), sizeof(Ticket));
-                cout << "Ticket deleted successfully!" << endl;
-
-                cout <<"Ticket Number: "<<ticketnumber<<"deleted.\n";
-             }
-             else
-             {
-                 //display error if ticket does not exist
-              cerr <<"Ticket Number: "<< ticketnumber <<"is empty.\n" << endl;
-             }
+      // display error if ticket does not show up
+      cerr << "Ticket Number: " << ticketnumber << "has no information." << endl
     }
+  }
+}
+
+// Function to view Warrant details of each driver
+void
+CheckWarrantStatus()
+{
+
+  cout << "Checking warrant status..." << endl;
+}
+
+void deleteTicket()
+{
+  // obtain the ticket number for ticket update
+  int ticketnumber{getTicketNumber("Enter Ticket to delete:")};
+
+  // move file-position pointer to correct ticket record to file
+  {
+    deleteFromFile.seekg((ticketnumber - 1) * sizeof(Ticket));
+  }
+
+  // create record object and read first record from file
+  Ticket newTicket;
+  deleteFromFile.read(reinterpret_cast<char *>(&newTicket), sizeof(Ticket));
+
+  // delete record, if record exists in file
+  if (newTicket.getTicketNumber() != 0)
+  {
+    Ticket blankticket; // create blank record
+    // move file-position pointer to correct ticket record in file
+    {
+      deleteFromFile.seekp((ticketnumber - 1) * sizeof(Ticket));
+    }
+    // replacing existing ticket record with blank record
+    updateFile.write(reinterpret_cast<const_cast *>(&newTicket), sizeof(Ticket));
+    cout << "Ticket deleted successfully!" << endl;
+
+    cout << "Ticket Number: " << ticketnumber << "deleted.\n";
+  }
+  else
+  {
+    // display error if ticket does not exist
+    cerr << "Ticket Number: " << ticketnumber << "is empty.\n"
+         << endl;
+  }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 
@@ -375,18 +352,18 @@ public:
 
         int ticketnumber
         cin >> ticketnumber; //read ticket number
-   
+
 
     // officer enters information which is copied into file
     while (ticketnumber > 0 && ticketnumber <= 100)
     {
-      
+
        officer enters ticket information
        cout <<"";
        cin >>
        cin >>
        cin >>
-      
+
 
       // create object for Ticketclass
       JCFOfficer newticket{};
@@ -394,29 +371,29 @@ public:
       // seek position in the file of user specified record
       /* outTicket.seekp((newticket.getTicketNumber() - 1) * sizeof(JCFOfficer)); */
 
-      // write user-specified information in file
-      /*outTicket.write(reinterpret_cast<const char*>(&blankTickets), sizeof(JCFOfficer)); 
-    }
-  }
-  // Function to display the tickets that are due
-  void ViewTicketsDue()
-  {
-  }
-  // Function to view tickets
-  void ViewTickets()
-  {
-  }
-  // Function to view outstanding tickets from driver in each parish
-  void TicketsParish()
-  {
-  }
-  // Function to update ticket
-  void updateTicket()
-  {
-  }
-  // Function to view Warrant details of each driver
-  void CheckWarrantStatus()
-  {
-  }
+// write user-specified information in file
+/*outTicket.write(reinterpret_cast<const char*>(&blankTickets), sizeof(JCFOfficer));
+}
+}
+// Function to display the tickets that are due
+void ViewTicketsDue()
+{
+}
+// Function to view tickets
+void ViewTickets()
+{
+}
+// Function to view outstanding tickets from driver in each parish
+void TicketsParish()
+{
+}
+// Function to update ticket
+void updateTicket()
+{
+}
+// Function to view Warrant details of each driver
+void CheckWarrantStatus()
+{
+}
 };
 */

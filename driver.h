@@ -96,7 +96,7 @@ public:
         cin >> contactnumber;
     }
 
-    void Driver()
+    void createDriver()
     {
         setTrn();
         setName();
