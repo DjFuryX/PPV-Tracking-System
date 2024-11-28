@@ -10,7 +10,9 @@ int main()
     Applicant *applicant=new Applicant();
     applicant->initialiseApplicantList();
     applicant->retrieveApplication(100);
+    cout << "Applications Saved: " << numApplicationSaved << endl;
     applicant->Display();
+    applicant->DeleteApplication();
 
     cout << "Applications Saved: " << numApplicationSaved << endl;
 

@@ -1,6 +1,7 @@
 // JCF_Officer Class
 #include <iostream>
 #include "Auxillary.h"
+#include "User.h"
 using namespace std;
 
 class JCF_Officer

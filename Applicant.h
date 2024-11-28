@@ -181,7 +181,7 @@ public:
     void DeleteApplication()
     {
         int Userinput;
-
+        Applicant a1;
         cout << "Enter the Applicants Tax Registration Number: " << endl;
         cin >> Userinput;
 
@@ -191,35 +191,34 @@ public:
             cout << "User not Found" << endl;
         }
         else
-        {cout << "User found at index:"<<index<< endl;
+        {
+            
+            cout << "User found at index:" << index<< endl;
             try
             {
 
-                fstream raFile(filename, ios::out|ios::in | ios::binary);
+                fstream raFile(filename, ios::out | ios::in | ios::binary);
                 if (raFile.fail())
                 {
-                    throw runtime_error("cannot create database");
+                    throw runtime_error("cannot open database");
                 }
                 raFile.close();
-                for (int idx = index; idx <= numApplicationSaved-1; idx++)
+
+                for (int idx = index; idx <= numApplicationSaved - 1; idx++)
                 {
-                    //read record ahead
-                    retrieveApplication(idx+1);
-
-                    //overwrite current position
-                    SaveApplication(idx);
-                    cout<<"*";
-
+                    // read record ahead
+                    this->retrieveApplication(idx + 101);
+                    // overwrite current position
+                    this->SaveApplication(idx+100);
+                    cout << "*";
                 }
-                cout<<endl;
-                raFile.close();
+                cout << endl;
                 numApplicationSaved--;
-                cout<<"Applicant "<<Userinput<<" Deleted"<<endl;
+                cout << "Applicant " << Userinput << " Deleted" << endl;
             }
             catch (runtime_error &e)
             {
-
-
+                cout << "Error: " << e.what() << endl;
             }
         }
     }
@@ -281,7 +280,7 @@ public:
             case 2:
                 currApplicant->UpdateApplication();
                 break;
-             case 3:
+            case 3:
                 currApplicant->DeleteApplication();
                 break;
             default: // if an invalid number is entered
@@ -368,8 +367,9 @@ public:
                 file.read(reinterpret_cast<char *>(this), sizeof(*this));
                 if (this->trn == searchQuery)
                 {
-                    foundIndex = this->appID;
+                    foundIndex = i;
                     retrieveApplication(i);
+                    break;
                 }
             }
             file.close();
@@ -378,7 +378,7 @@ public:
         {
             cerr << e.what() << endl;
         }
-        return foundIndex-OFFSET;
+        return foundIndex;
     }
 
     void SaveApplication(int appID)
