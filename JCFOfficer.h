@@ -1,4 +1,4 @@
-// JCF_Officer Class
+// JCFOfficer Class
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -6,40 +6,40 @@
 #include "User.h" 
 using namespace std;
 
-class JCF_Officer : public User
+class JCFOfficer : public User
 {
 private:
   int badgenumber;
   char firstname[35];
   char lastname[35];
-  string assignedStation;
+  char assignedStation[50];
 
 public:
   // default constructor//
-  JCF_Officer()
+  JCFOfficer()
   {
     badgenumber = 0;
     writeFixedLengthString(firstname, "NameNotSet");
     writeFixedLengthString(lastname, "NameNotSet");
-    assignedStation = "";
+    writeFixedLengthString(assignedStation,"StationNot set");
   }
 
   // primary constructor
-  JCF_Officer(int bnum, string fn, string ln, string station)
+  JCFOfficer(int bnum, string fn, string ln, string station)
     {
         badgenumber = bnum;
-        firstname = fn;
-        lastname = ln;
-        assignedStation = station;
+        writeFixedLengthString(firstname,fn);
+        writeFixedLengthString(lastname,ln);
+        writeFixedLengthString(assignedStation,station);
     }
 
   // copy constructor
-  JCF_Officer(JCF_Officer &officer)
+  JCFOfficer(JCFOfficer &officer)
   {
     badgenumber = officer.badgenumber;
-    firstname = officer.firstname;
-    lastname = officer.lastname;
-    assignedStation = officer.assignedStation;
+     writeFixedLengthString(firstname,officer.firstname);
+     writeFixedLengthString(lastname,officer.lastname);
+     writeFixedLengthString(assignedStation,officer.assignedStation);
   }
 
   // Login function
@@ -118,7 +118,7 @@ public:
 
   void setAssignedStation(const string &station)
   {
-    assignedStation = station;
+    writeFixedLengthString(assignedStation,station);
   }
 
 
@@ -184,9 +184,7 @@ public:
 
     // Function to view tickets that are due
     void ViewTicketsDue()
-    {
-        /
-        
+    {  
         cout << "Viewing tickets that are due..." << endl;
     }
 
@@ -257,7 +255,7 @@ public:
         for (int t = 0; t < 100; ++t)
         {
             Ticket blankTicket;  // Constructor eliminates each data member
-            outTicket.write(reinterpret_cast<const char *>(&blankTicket), sizeof(JCF_Officer));
+            outTicket.write(reinterpret_cast<const char *>(&blankTicket), sizeof(JCFOfficer));
         }
 
         fstream inOutTicket{"NewTicket.dat", ios::in | ios::out | ios::binary};
@@ -280,13 +278,13 @@ public:
       
 
       // create object for Ticketclass
-      JCF_Officer newticket{};
+      JCFOfficer newticket{};
 
       // seek position in the file of user specified record
-      /* outTicket.seekp((newticket.getTicketNumber() - 1) * sizeof(JCF_Officer)); */
+      /* outTicket.seekp((newticket.getTicketNumber() - 1) * sizeof(JCFOfficer)); */
 
       // write user-specified information in file
-      /*outTicket.write(reinterpret_cast<const char*>(&blankTickets), sizeof(JCF_Officer)); 
+      /*outTicket.write(reinterpret_cast<const char*>(&blankTickets), sizeof(JCFOfficer)); 
     }
   }
   // Function to display the tickets that are due

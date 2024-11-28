@@ -2,6 +2,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include "Driver.h"
 #include "Auxillary.h"
 #include "Address.h"
 #include "Date.h"
@@ -14,26 +15,19 @@ int OFFSET = 100;
 const int MaxAppRecord = 500;
 const string filename = "ApplicationList.dat";
 int numApplicationSaved = 0;
-const int maxStringsize = 50;
 
-class Applicant
+class Applicant:Driver
 {
 
-protected:
-    int trn;
-    int appID;
-    int contactnumber;
-    char name[maxStringsize];
-    char denyReason[maxStringsize];
-    char emailAddr[maxStringsize];
+private:
     char status[maxStringsize];
-    Address currAddr;
-    Date dob;
+
     bool recentAccident;
     bool policeRecord;
 
 public:
     Applicant()
+    :Driver()
     {
         appID = 100;
         trn = 0;
@@ -43,73 +37,9 @@ public:
         writeFixedLengthString(denyReason, "NotSet");
     }
 
-    int getappID()
+     int getappID()
     {
         return appID;
-    }
-
-    int GetTrn()
-    {
-        return trn;
-    }
-
-    int GetContactNumner()
-    {
-        return contactnumber;
-    }
-
-    string GetName()
-    {
-        return name;
-    }
-    string GetEmailAddr()
-    {
-        return emailAddr;
-    }
-
-    Address GetAddress()
-    {
-        return currAddr;
-    }
-
-    Date GetDob()
-    {
-        return dob;
-    }
-
-    void setTrn()
-    {
-        cout << "Please Enter Appicants TRN" << endl;
-        cin >> trn;
-    }
-
-    void setName()
-    {
-        cout << "Please Enter Applicant's Full Name" << endl;
-        getInput(cin, name);
-    }
-
-    void setDob()
-    {
-        cout << "Please Enter Applicant's Date of Birth" << endl;
-        dob.SetDob();
-    }
-    void setAddress()
-    {
-        cout << "Please Enter Applicant's Address" << endl;
-        currAddr.SetAdrress();
-    }
-
-    void setEmailAddress()
-    {
-        cout << "Please Enter Applicant's Email Address" << endl;
-        getInput(cin, emailAddr);
-    }
-
-    void setContactNumber()
-    {
-        cout << "Please Enter Applicant's Contact Number" << endl;
-        cin >> contactnumber;
     }
 
     bool setQualification(istream &stream)
@@ -359,7 +289,7 @@ public:
                 if (this->trn == searchQuery)
                 {
                     foundIndex = appID;
-                    // retrieveApplication(i);
+                    retrieveApplication(i);
                     break;
                 }
             }

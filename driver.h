@@ -1,47 +1,109 @@
 // Driver Class
-#include <stdexcept>  
+#include <stdexcept> 
 #include <iostream>
 #include <string>
-#include <vector>
-#include "Applicant.h"
+#include "Date.h"
+#include "Address.h"
 #include "User.h"
 #include "Ticket.h"
 
 using namespace std;
 
-class Driver: public Applicant, public User
+class Driver:public User
 {
-
-private:
-    vector<Ticket> tickets; // List of tickets the driver has
-    int trn;  // Driver's TRN 
-    string name;  // Driver's name
-    string emailAddr;  // Driver's email address
+    protected:
+    int trn;
+    int appID;
+    int contactnumber;
+    char name[maxStringsize];
+    char denyReason[maxStringsize];
+    char emailAddr[maxStringsize];
+    Address currAddr;
+    Date dob;
 
 public:
     Driver()
     {
         trn = 0;
-        name = "not Set";
-        emailAddr = "NotSet@email.com";
+        contactnumber = 0;
+        writeFixedLengthString(name, "NotSet");
+        writeFixedLengthString(emailAddr, "Notset");
+        writeFixedLengthString(denyReason, "NotSet");
     }
 
-    Driver(int trn, string driverName, string email, time_t dateOfBirth, string street, string city, string parish)
+   
+    int GetTrn()
     {
-        this->trn = trn;
-        name = driverName;
-        emailAddr = email;
+        return trn;
     }
 
-    void display()
+    int GetContactNumner()
     {
-        cout << "Trn: " << trn << endl;
-        cout << "Name:" << name << endl;
-        cout << "Email Address:" << emailAddr << endl;
-        cout << "----------------------------" << endl;
-        currAddr.Display();
-        cout << "----------------------------" << endl;
-      
+        return contactnumber;
+    }
+
+    string GetName()
+    {
+        return name;
+    }
+    string GetEmailAddr()
+    {
+        return emailAddr;
+    }
+
+    Address GetAddress()
+    {
+        return currAddr;
+    }
+
+    Date GetDob()
+    {
+        return dob;
+    }
+    
+    void setTrn()
+    {
+        cout << "Please Enter Appicants TRN" << endl;
+        cin >> trn;
+    }
+
+    void setName()
+    {
+        cout << "Please Enter Applicant's Full Name" << endl;
+        getInput(cin, name);
+    }
+
+    void setDob()
+    {
+        cout << "Please Enter Applicant's Date of Birth" << endl;
+        dob.SetDob();
+    }
+    void setAddress()
+    {
+        cout << "Please Enter Applicant's Address" << endl;
+        currAddr.SetAdrress();
+    }
+
+    void setEmailAddress()
+    {
+        cout << "Please Enter Applicant's Email Address" << endl;
+        getInput(cin, emailAddr);
+    }
+
+    void setContactNumber()
+    {
+        cout << "Please Enter Applicant's Contact Number" << endl;
+        cin >> contactnumber;
+    }
+
+    void Driver()
+    {
+        setTrn();
+        setName();
+        setDob();
+        setContactNumber();
+        setAddress();
+        setEmailAddress();
     }
 
 
@@ -86,40 +148,7 @@ public:
         }
     }
 
-    // Getter for TRN
-    int getTrn() const
-    {
-        return trn;
-    }
-
-    // Setter for TRN
-    void setTrn(int trn)
-    {
-        if (trn > 0)
-        {
-            this->trn = trn;
-        }
-        else
-        {
-            cout << "TRN must be greater than 0. Please re-enter a valid TRN" << endl;
-        }
-    }
 
 
 };
 
-
-
-
-/*int main() {
-    Driver driver(12345678, "John Doe", "john.doe@email.com");
-
-    // Assuming password is set somewhere else, e.g., via User class
-    // Let's assume for testing, we set the password directly
-    driver.setPassword(1234);  // Assume 1234 is the password set for the driver
-
-    // Call login function
-    driver.Login();  // This will prompt for TRN and password and attempt to login
-
-    return 0;
-}*/

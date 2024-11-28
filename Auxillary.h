@@ -13,6 +13,8 @@ using namespace std;
 #define GRN "\x1B[32m" // define colour green for console print
 #define RST "\x1B[0m"  // define colour white for console print
 
+const int maxStringsize = 50;
+
 void writeFixedLengthString(char attribute[], string value)
 {
     unsigned int maxLength=50;
