@@ -207,8 +207,82 @@ public:
     // Function to update a ticket
     void updateTicket()
     {
-        
         cout << "Updating ticket..." << endl;
+
+        //obtain the ticket number for ticket update
+             int ticketnumber{getTicketNumber("Enter Ticket Number:")};
+             
+             //move file-position pointer to correct ticket record to file
+             {
+              updateFile.seekg((ticketnumber - 1) * sizeof(Ticket));
+             }
+
+             //create record object and read first record from file
+             Ticket newTicket;
+             updateFile.read(reinterpret_cast<char*>(&newTicket), sizeof(Ticket));
+
+             //update ticket record
+             if(newTicket.getTicketNumber() != 0)
+             {
+               outputLine(cout, newTicket); // display the ticket record
+
+               //request the officer to enter new data to display updated ticket report
+                cout << "Enter ticket issue date (YYYY-MM-DD): "
+                cin >> issueDate;
+
+                cout << "Enter offence code: "
+                cin >> offenceCode;
+
+                cout << "Enter offence description: "
+                cin.ignore();  
+                getline(cin, offenceDesc);
+
+               cout << "Enter license plate number: " 
+               cin >> plateNumber;
+
+               cout << "Enter ticket amount: $"
+               cin >> amount;
+
+               cout << "Enter due date (YYYY-MM-DD): "
+               cin >> dueDate;
+
+               cout << "Enter court date (YYYY-MM-DD): "
+               cin >> courtDate;
+
+               cout << "Enter issuing officer's name: "
+               cin.ignore();  
+               getline(cin, issuingOfficer);
+
+               cout << "Enter court location: "
+               getline(cin, courtLocation);
+
+            newTicket.setTicketNumber(ticketnumber);
+            newTicket.setTicketIssueDate(issueDate);
+            newTicket.setTicketOffenceCode(offenceCode);
+            newTicket.setTicketOffenceDescription(offenceDesc);
+            newTicket.setLicensePlateNumber(plateNumber);
+            newTicket.setTicketAmount(amount);
+            newTicket.setDueDate(dueDate);
+            newTicket.setCourtDate(courtDate);
+            newTicket.setIssuingOfficer(issuingOfficer);
+            newTicket.setCourtLocation(courtLocation);
+
+             //move file-position pointer to correct ticket record in file
+             {
+              updateFile.seekp((ticketnumber - 1) * sizeof(Ticket));
+             }
+
+              //write updated record over old record in file
+              updateFile.write(reinterpret_cast<const_cast*>(&newTicket), sizeof(Ticket));
+              cout << "Ticket updated successfully!" << endl;
+
+            }
+            else
+            {
+              //display error if ticket does not show up
+              cerr <<"Ticket Number: "<< ticketnumber <<"has no information." << endl
+            }
+          }
     }
 
     // Function to view Warrant details of each driver
@@ -216,6 +290,41 @@ public:
     {
        
         cout << "Checking warrant status..." << endl;
+    }
+
+    void deleteTicket()
+    {
+             //obtain the ticket number for ticket update
+             int ticketnumber{getTicketNumber("Enter Ticket to delete:")};
+             
+             //move file-position pointer to correct ticket record to file
+             {
+              deleteFromFile.seekg((ticketnumber - 1) * sizeof(Ticket));
+             }
+
+              //create record object and read first record from file
+             Ticket newTicket;
+             deleteFromFile.read(reinterpret_cast<char*>(&newTicket), sizeof(Ticket));
+
+             //delete record, if record exists in file
+             if(newTicket.getTicketNumber() != 0)
+             {
+                Ticket blankticket; //create blank record
+                //move file-position pointer to correct ticket record in file
+                {
+                  deleteFromFile.seekp((ticketnumber - 1) * sizeof(Ticket));
+                }
+                 //replacing existing ticket record with blank record
+                 updateFile.write(reinterpret_cast<const_cast*>(&newTicket), sizeof(Ticket));
+                cout << "Ticket deleted successfully!" << endl;
+
+                cout <<"Ticket Number: "<<ticketnumber<<"deleted.\n";
+             }
+             else
+             {
+                 //display error if ticket does not exist
+              cerr <<"Ticket Number: "<< ticketnumber <<"is empty.\n" << endl;
+             }
     }
 };
 
