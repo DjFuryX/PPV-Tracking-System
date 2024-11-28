@@ -1,10 +1,12 @@
 // JCF_Officer Class
 #include <iostream>
+#include <fstream>
+#include <string>
 #include "Auxillary.h"
-#include "User.h"
+#include "User.h" 
 using namespace std;
 
-class JCF_Officer
+class JCF_Officer : public User
 {
 private:
   int badgenumber;
@@ -24,12 +26,12 @@ public:
 
   // primary constructor
   JCF_Officer(int bnum, string fn, string ln, string station)
-  {
-    badgenumber = bnum;
-    firstname = fn;
-    lastname = ln;
-    station = assignedStation;
-  }
+    {
+        badgenumber = bnum;
+        firstname = fn;
+        lastname = ln;
+        assignedStation = station;
+    }
 
   // copy constructor
   JCF_Officer(JCF_Officer &officer)
@@ -40,35 +42,78 @@ public:
     assignedStation = officer.assignedStation;
   }
 
-  // Setters
-  void setBadgeNumber(int bnum)
-  {
-    if (bnum > 0)
+  // Login function
+    void Login() override
     {
-      badgenumber = bnum;
-    }
-    else
-    {
-      cout << "Badge number must be greater than 0. Please re-enter a valid number" << endl;
-    }
-  }
+        try
+        {
+            // Display JCF Officers login
+            cout << "\n\t\t +----------------------------+ JCF Officer Login +----------------------------+\n" << endl;
+            cout << "\t\tPlease enter Badge Number:\t";
+            int enteredBadgeNumber;
+            cin >> enteredBadgeNumber;  // Input the badge number
 
-  void setFirstName(const string &fnString)
-  {
+            cout << "\t\tPlease enter Password:\t";
+            int enteredPassword;  // Password as integer
+            cin >> enteredPassword;   // Input the password
+
+            if (enteredBadgeNumber <= 0 || enteredPassword <= 0)
+            {
+                throw runtime_error("Invalid badge number or password. Please try again.");
+            }
+
+            // Check if entered badge number and password are correct
+            if (enteredBadgeNumber == badgenumber && enteredPassword == getPassword())
+            {
+                cout << "Login successful! Welcome, JCF Officer " << firstname << " " << lastname << "." << endl;
+                this->processOfficerHandler();
+                system("pause");
+            }
+            else
+            {
+                cout << "Invalid badge number or password. Please try again." << endl;
+                system("pause");
+            }
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+            system("cls");
+            this->Login();  // Recursively retry login on error
+        }
+    }
+
+
+
+   // Setters
+    void setBadgeNumber(int bnum)
+    {
+        if (bnum > 0)
+        {
+            badgenumber = bnum;
+        }
+        else
+        {
+            cout << "Badge number must be greater than 0. Please re-enter a valid number" << endl;
+        }
+    }
+    
     // copy at most 35 characters from string to firstname
-    size_t length{fnString.size()};
-    length = (length < 35 ? length : 34);
-    fnString.copy(firstname, length);
-    firstname[length] = '\0'; // append null character to firstname
-  }
+  void setFirstName(const string &fnString)
+    {
+        size_t length = fnString.size();
+        length = (length < 35 ? length : 34);
+        fnString.copy(firstname, length);
+        firstname[length] = '\0';  // Null-terminate the string
+    }
 
   void setLastName(const string &lnString)
   {
     // copy at most 35 characters from string to lastname
-    size_t length{lnString.size()};
-    length = (length < 35 ? length : 34);
-    lnString.copy(lastname, length);
-    lastname[length] = '\0'; // append null character to firstname
+    size_t length = lnString.size();
+      length = (length < 35 ? length : 34);
+      lnString.copy(lastname, length);
+      lastname[length] = '\0'; // append null character to firstname
   }
 
   void setAssignedStation(const string &station)
@@ -76,65 +121,163 @@ public:
     assignedStation = station;
   }
 
-  // Getters
-  int getBadgeNumber() const
-  {
-    return bnum;
-  }
 
-  string getFirstName() const
-  {
-    return fn;
-  }
+  // Add ticket method
+    void AddTicket() {
+        ofstream outTicket{"NewTicket.dat", ios::out};
+        if (!outTicket) {
+          cerr << "Error opening file. Please try again later." << endl;
+          return;  // Gracefully exit the function without crashing the entire system.
+        }
+        int ticketnumber;
+        cout << "Enter new ticket number (1 to 100, 0 to end input): ";
+        cin >> ticketnumber;
 
-  string getLastName() const
-  {
-    return ln;
-  }
+        while (ticketnumber > 0 && ticketnumber <= 100) {
+            Ticket newTicket;  // Create object for Ticket class
 
-  string getAssignedStation() const
-  {
-    return station;
-  }
+            // Enter ticket details
+            string issueDate, offenceCode, offenceDesc, plateNumber, dueDate, courtDate, issuingOfficer, courtLocation;
+            float amount;
 
-  // Function for adding new ticket
-  void AddTicket(const string &stringNewTicket)
-  {
-    ofstream outTicket{"NewTicket.dat", ios::out | ios::binary};
+            cout << "Enter ticket issue date (YYYY-MM-DD): ";
+            cin >> issueDate;
+            cout << "Enter offence code: ";
+            cin >> offenceCode;
+            cout << "Enter offence description: ";
+            cin.ignore();  
+            getline(cin, offenceDesc);
+            cout << "Enter license plate number: ";
+            cin >> plateNumber;
+            cout << "Enter ticket amount: $";
+            cin >> amount;
+            cout << "Enter due date (YYYY-MM-DD): ";
+            cin >> dueDate;
+            cout << "Enter court date (YYYY-MM-DD): ";
+            cin >> courtDate;
+            cout << "Enter issuing officer's name: ";
+            cin.ignore();  
+            getline(cin, issuingOfficer);
+            cout << "Enter court location: ";
+            getline(cin, courtLocation);
 
-    // exit program if output stream could not open file
-    if (!outTicket)
-    {
-      cerr << "File could not be opened!" << endl;
-      exit(EXIT_FAILURE);
+            newTicket.setTicketNumber(ticketnumber);
+            newTicket.setTicketIssueDate(issueDate);
+            newTicket.setTicketOffenceCode(offenceCode);
+            newTicket.setTicketOffenceDescription(offenceDesc);
+            newTicket.setLicensePlateNumber(plateNumber);
+            newTicket.setTicketAmount(amount);
+            newTicket.setDueDate(dueDate);
+            newTicket.setCourtDate(courtDate);
+            newTicket.setIssuingOfficer(issuingOfficer);
+            newTicket.setCourtLocation(courtLocation);
+
+            outTicket.write(reinterpret_cast<const char*>(&newTicket), sizeof(Ticket));
+            cout << "Ticket added successfully!" << endl;
+
+            cout << "Enter new ticket number (1 to 100, 0 to end input): ";
+            cin >> ticketnumber;
+        }
+
+        outTicket.close();
     }
 
-    Jcf_Officer blankTicket; // constructor eliminates each data member
-
-    // output required number of blank records to file
-    for (int t = 0; t < 100; ++t)
+    // Function to view tickets that are due
+    void ViewTicketsDue()
     {
-      outTicket.write(reinterpret_cast<const char *>(&blankTickets), sizeof(JCF_Officer));
+        /
+        
+        cout << "Viewing tickets that are due..." << endl;
     }
 
-    fstream outTicket{"NewTicket.dat", ios::in | ios::out | ios::binary};
+    // Function to view all tickets
+    void ViewTickets()
+    {
+        
+        cout << "Viewing all tickets..." << endl;
+    }
 
-    cout << "Enter new ticket number (1 to 100, 0 to end input)\n";
+    // Function to view outstanding tickets from drivers in each parish
+    void TicketsParish()
+    {
+        
+        cout << "Viewing outstanding tickets in each parish..." << endl;
+    }
 
-    /*int ticketnumber
-   cin >> ticketnumber; //read ticket number
-   */
+    // Function to update a ticket
+    void updateTicket()
+    {
+        
+        cout << "Updating ticket..." << endl;
+    }
+
+    // Function to view Warrant details of each driver
+    void CheckWarrantStatus()
+    {
+       
+        cout << "Checking warrant status..." << endl;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+
+     // Function for adding new ticket
+    void AddTicket(const string &stringNewTicket)
+    {
+        ofstream outTicket{"NewTicket.dat", ios::out | ios::binary};
+
+        // Exit program if output stream could not open file
+        if (!outTicket)
+        {
+            cerr << "File could not be opened!" << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        // Output required number of blank records to file
+        for (int t = 0; t < 100; ++t)
+        {
+            Ticket blankTicket;  // Constructor eliminates each data member
+            outTicket.write(reinterpret_cast<const char *>(&blankTicket), sizeof(JCF_Officer));
+        }
+
+        fstream inOutTicket{"NewTicket.dat", ios::in | ios::out | ios::binary};
+
+        cout << "Enter new ticket number (1 to 100, 0 to end input)\n";
+
+        int ticketnumber
+        cin >> ticketnumber; //read ticket number
+   
 
     // officer enters information which is copied into file
     while (ticketnumber > 0 && ticketnumber <= 100)
     {
-      /*
+      
        officer enters ticket information
        cout <<"";
        cin >>
        cin >>
        cin >>
-      */
+      
 
       // create object for Ticketclass
       JCF_Officer newticket{};
@@ -143,7 +286,7 @@ public:
       /* outTicket.seekp((newticket.getTicketNumber() - 1) * sizeof(JCF_Officer)); */
 
       // write user-specified information in file
-      /*outTicket.write(reinterpret_cast<const char*>(&blankTickets), sizeof(JCF_Officer)); */
+      /*outTicket.write(reinterpret_cast<const char*>(&blankTickets), sizeof(JCF_Officer)); 
     }
   }
   // Function to display the tickets that are due
@@ -167,3 +310,4 @@ public:
   {
   }
 };
+*/
