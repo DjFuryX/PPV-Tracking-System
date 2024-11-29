@@ -22,7 +22,7 @@ int main()
         { // case structure is used to determine option selected
         case 1:
             userPtr = new Driver(); // Provide Service to Driver
-
+            userPtr->Login();
             break;
         case 2:
              // UserPtr= new JCFOfficer();// Provide Service to JCF officeruser

@@ -33,6 +33,16 @@ public:
         writeFixedLengthString(denyReason, "NotSet");
     }
 
+
+    Driver(int trn, int contactnumber,string drivername, string denyReason, string emailAddr)
+    {
+        this->trn = trn;
+        this->contactnumber= contactnumber;
+        writeFixedLengthString(name, name);
+        currAddr.SetAdrress();
+    }
+
+    
    
     int GetTrn()
     {
