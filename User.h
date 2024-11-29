@@ -4,8 +4,8 @@
 #include"Auxillary.h"
 using namespace std;
 
-#ifndef Auxillary.h
-#define Auxillary.h
+#ifndef User_H
+#define User_H
 
 class User
 {
@@ -59,4 +59,4 @@ public:
     virtual void Login() = 0;
 };
 
-#endif // Auxillary.h
+#endif // User.h

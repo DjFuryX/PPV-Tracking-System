@@ -6,8 +6,10 @@
 #include "Address.h"
 #include "User.h"
 #include "Ticket.h"
-
 using namespace std;
+
+#ifndef Driver_h
+#define Driver_h
 
 class Driver:public User
 {
@@ -148,7 +150,7 @@ public:
         }
     }
 
-
-
 };
 
+
+#endif // Driver_h
