@@ -3,6 +3,8 @@
 #include <iostream>
 #include "ProcessOfficer.h"
 #include"User.h"
+#include"Driver.h"
+//#include"JCFOfficer.h"
 using namespace std;
 
 int main()
@@ -12,21 +14,18 @@ int main()
     applicant->initialiseApplicantList();
     cout << "Applications Saved: " << numApplicationSaved << endl;
 
-    system("pause");
-
     int option = userPtr->User::ShowMenu(); // get user option
-
     while (option != 0)
     { // Start while loop for main menu
 
         switch (option)
         { // case structure is used to determine option selected
         case 1:
-            //  UserPtr = new Driver(); // Provide Service to Driver
+            userPtr = new Driver(); // Provide Service to Driver
 
             break;
         case 2:
-            //   UserPtr= new JCFOfficer();// Provide Service to JCF officeruser
+             // UserPtr= new JCFOfficer();// Provide Service to JCF officeruser
 
             break;
         case 3:
