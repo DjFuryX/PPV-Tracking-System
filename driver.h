@@ -33,14 +33,24 @@ public:
         writeFixedLengthString(denyReason, "NotSet");
     }
 
-
-    Driver(int trn, int contactnumber,string drivername, string denyReason, string emailAddr)
+    Driver(int trn, int contactnumber, string name, string denyReason, string emailAddr, int password)
+    {
+    this->trn = trn;
+    this->contactnumber = contactnumber;
+    writeFixedLengthString(this->name, name.c_str());
+    writeFixedLengthString(this->denyReason, denyReason.c_str());
+    writeFixedLengthString(this->emailAddr, emailAddr.c_str());
+    this->password = password;
+    currAddr.SetAdrress();
+    dob.SetDob();  
+}
+    /*Driver(int trn, int contactnumber,string name, string denyReason, string emailAddr)
     {
         this->trn = trn;
         this->contactnumber= contactnumber;
-        writeFixedLengthString(name, name);
+        //writeFixedLengthString(name);
         currAddr.SetAdrress();
-    }
+    }*/
 
     
    

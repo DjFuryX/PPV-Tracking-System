@@ -9,11 +9,16 @@ using namespace std;
 
 int main()
 {
-    User *userPtr;
+    User *userPtr = nullptr;
     Applicant *applicant=new Applicant();
     applicant->initialiseApplicantList();
     cout << "Applications Saved: " << numApplicationSaved << endl;
 
+    /*int option = 0;  // Initialize option to 0 (safe default value)
+
+    // You need to initialize userPtr before calling ShowMenu()
+    option = userPtr != nullptr ? userPtr->ShowMenu() : 0; // get user option (only call ShowMenu if userPtr is valid)*/
+    
     int option = userPtr->User::ShowMenu(); // get user option
     while (option != 0)
     { // Start while loop for main menu
@@ -21,7 +26,7 @@ int main()
         switch (option)
         { // case structure is used to determine option selected
         case 1:
-            userPtr = new Driver(); // Provide Service to Driver
+            userPtr = new Driver(12345, 6543210, "John", "Traffic Violation", "john.doe@example.com", 540); // Provide Service to Driver
             userPtr->Login();
             break;
         case 2:

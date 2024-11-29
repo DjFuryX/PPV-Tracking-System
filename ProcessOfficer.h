@@ -68,7 +68,7 @@ public:
 
     void processOfficerHandler()
     {
-        Applicant *currFunction;
+        Applicant *currFunction = new Applicant();
 
         int option = this->ShowMenu(); // get user option
 

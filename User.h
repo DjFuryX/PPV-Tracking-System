@@ -9,7 +9,7 @@ using namespace std;
 
 class User
 {
-private:
+protected:
     char username[50];
     int password;
 
@@ -33,6 +33,7 @@ public:
     {
         getInput(cin,username);
     }
+    
 
     int ShowMenu()
     {
@@ -44,7 +45,7 @@ public:
         cout << "Date: " << ctime(&timestamp) << endl; // print current date and time
         /*prints a menu so the user can select their desired choice*/
         cout << "\n\t\t +--------------------------------+ Please Login +--------------------------------+" << endl;
-        cout << "\t\t   | " CYN "1." RST "    Driver                                                                    |" << endl;
+        cout << "\t\t  | " CYN "1." RST "    Driver                                                                    |" << endl;
         cout << "\n\t\t | " CYN "2." RST "    JCF Officer                                                               |" << endl;
         cout << "\n\t\t | " CYN "3." RST "    Processing Officer                                                        |" << endl;
         cout << "\n\t\t | " CYN "0." RST "    Exit                                                                      |" << endl;
