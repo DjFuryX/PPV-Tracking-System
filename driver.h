@@ -41,8 +41,8 @@ public:
     writeFixedLengthString(this->denyReason, denyReason.c_str());
     writeFixedLengthString(this->emailAddr, emailAddr.c_str());
     this->password = password;
-    currAddr.SetAdrress();
-    dob.SetDob();  
+    //currAddr.SetAdrress();
+    //dob.SetDob();  
 }
     /*Driver(int trn, int contactnumber,string name, string denyReason, string emailAddr)
     {

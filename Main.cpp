@@ -26,8 +26,10 @@ int main()
         switch (option)
         { // case structure is used to determine option selected
         case 1:
-            userPtr = new Driver(12345, 6543210, "John", "Traffic Violation", "john.doe@example.com", 540); // Provide Service to Driver
-            userPtr->Login();
+        
+           userPtr = new Driver(12345, 6543210, "John", "Traffic Violation", "john.doe@example.com", 540); // Provide Service to Driver
+           userPtr->Login();
+
             break;
         case 2:
              // UserPtr= new JCFOfficer();// Provide Service to JCF officeruser
