@@ -10,10 +10,14 @@ using namespace std;
 int main()
 {
     User *userPtr = nullptr;
-    Applicant *applicant = new Applicant();
-    applicant->initialiseApplicantList();
-    
 
+    Driver *applicant = new Applicant();
+    applicant->initialiseList();
+
+    userPtr = new Driver();
+    userPtr->initialiseList();
+
+    system("pause");
     /*int option = 0;  // Initialize option to 0 (safe default value)
 
     // You need to initialize userPtr before calling ShowMenu()
@@ -38,7 +42,7 @@ int main()
         case 3:
             userPtr = new ProcessOfficer(240, "Norman", "Ramble Police Station");
             userPtr->Login();
-            
+
             break;
         default: // if an invalid number is entered
             cout << "Invalid option chosen" << endl;

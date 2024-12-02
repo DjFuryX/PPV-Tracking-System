@@ -58,6 +58,8 @@ public:
     }
 
     virtual void Login() = 0;
+
+    virtual void initialiseList()=0;
 };
 
 #endif // User.h

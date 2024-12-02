@@ -11,9 +11,8 @@ using namespace std;
 #ifndef Applicant_H
 #define Applicant_H
 
-int OFFSET = 100;
 const int MaxAppRecord = 500;
-const string filename = "ApplicationList.dat";
+const string appFilename = "ApplicationList.dat";
 int numApplicationSaved = 0;
 
 class Applicant : public Driver
@@ -21,7 +20,7 @@ class Applicant : public Driver
 
 private:
     char status[maxStringsize];
-
+    int appID;
     bool recentAccident;
     bool policeRecord;
 
@@ -76,9 +75,9 @@ public:
         setName();
         cout << "Please Enter Applicant's Date of Birth" << endl;
         setDob();
-      cout << "Please Enter Applicant's Contact Number" << endl;
+        cout << "Please Enter Applicant's Contact Number" << endl;
         setContactNumber();
-           cout << "Please Enter Applicant's Address" << endl;
+        cout << "Please Enter Applicant's Address" << endl;
         setAddress();
         cout << "Please Enter Applicant's Email Address" << endl;
         setEmailAddress();
@@ -95,12 +94,13 @@ public:
     void UpdateApplication()
     {
 
-        int Userinput;
-
+        int userInput;
         cout << "Enter the Applicants Tax Registration Number: " << endl;
-        cin >> Userinput;
+        cin >> userInput;
 
-        if (findTrn(Userinput) == -1)
+        int id = findTrn(userInput);
+
+        if (id == -1)
         {
 
             cout << "User not Found" << endl;
@@ -108,45 +108,9 @@ public:
         else
         {
             cout << "User Found" << endl;
+            retrieveApplication(id);
+            updateMenuHandler();
         }
-        updateMenuHandler();
-    }
-
-    void DeleteApplication()
-    {
-        int Userinput;
-        cout << "Enter the Applicants Tax Registration Number: " << endl;
-        cin >> Userinput;
-
-        int key = findTrn(Userinput);
-
-        Applicant record;
-        bool was_removed = false;                     // was at least one record removed
-        ifstream fin(filename, ios::binary);          // open file in binary mode for reading
-        ofstream fout("tmp_record.dat", ios::binary); // create temporary file to write records that should not be deleted to it, and then replace files
-        while (fin.read((char *)&record, sizeof(Applicant)))
-        {
-            if (record.appID != key)
-            {                                                         // if the record does not match
-                fout.write((const char *)&record, sizeof(Applicant)); // write the value to the temporary file
-            }
-            else
-            {
-                was_removed = true; // the record was removed
-            }
-        }
-        if (!was_removed)
-        {                                                                 // if nothing was deleted
-            cout << "No records with key '" << key << "' found." << endl; // inform the user
-        }
-        else
-        {
-            cout << "Records with key '" << key << "' have been deleted." << endl; // inform the user of successful deletion
-        }
-        fin.close();                                // close the input file
-        fout.close();                               // close the output file
-        remove(filename.c_str());                   // delete the old main file
-        rename("tmp_record.dat", filename.c_str()); // rename the temporary file to the main one
     }
 
     void showAllApplicants()
@@ -154,15 +118,15 @@ public:
 
         try
         {
-            ifstream raFile(filename, ios::in | ios::binary);
+            ifstream raFile(appFilename, ios::in | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot retrieve record");
             }
-                cout << "Applications Saved: " << numApplicationSaved << endl;
+            cout << "Applications Saved: " << numApplicationSaved << endl;
             for (int index = 0; index < numApplicationSaved; index++)
             {
-                
+
                 raFile.seekg((index) * sizeof(*this));
                 raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
                 Display();
@@ -183,51 +147,13 @@ public:
             cerr << e.what() << endl;
         }
     }
+
     void Display()
     {
-        cout << "Applicant's Id: " << appID << endl;
-        cout << "Applicant's TRN: " << trn << endl;
-        cout << "Applicant's Name: " << name << endl;
-        cout << "Applicant's Email Address: " << emailAddr << endl;
-        cout << "Applicant's Contact Number: " << contactnumber << endl;
-        cout << "Applicant's Date of Birth: " << endl;
-        dob.Display();
-        cout << "Applicant's Address" << endl;
-        currAddr.Display();
+        Driver::Display();
         cout << "Recent Accident: " << (recentAccident == 1 ? "True" : "False") << endl;
         cout << "Police Record: " << (policeRecord == 1 ? "True" : "False") << endl;
         cout << "------------------" << endl;
-    }
-   void updateMenuHandler()
-    {
-        int option = updateMenu(); // get user option
-
-        while (option != 0)
-        { // Start while loop for main menu
-
-            switch (option)
-            { // case structure is used to determine option selected
-            case 1:
-                setName();
-                break;
-            case 2:
-                setTrn();
-                break;
-            case 3:
-                setAddress();
-                break;
-            case 4:
-                setEmailAddress();
-                break;
-            case 5:
-                setContactNumber();
-            default: // if an invalid number is entered
-                cout << "Invalid option chosen" << endl;
-                break;
-            } // end switch case
-            SaveApplication(appID);
-            option = this->updateMenu(); // get user option
-        }
     }
 
     int ShowMenu()
@@ -255,10 +181,9 @@ public:
         return choice;
     }
 
-    virtual void handler()
+    void handler()
     {
         int option = this->ShowMenu(); // get user option
-
 
         while (option != 0)
         { // Start while loop for main menu
@@ -269,7 +194,8 @@ public:
                 this->CreateApplication();
                 break;
             case 2:
-                this->UpdateApplication();
+                UpdateApplication();
+                SaveApplication(appID);
                 break;
             case 3:
                 this->DeleteApplication();
@@ -287,15 +213,13 @@ public:
         }
     }
 
-   
-
     int findTrn(int searchQuery)
     {
         int foundIndex = -1;
 
         try
         {
-            ifstream file(filename, ios::in | ios::binary);
+            ifstream file(appFilename, ios::in | ios::binary);
             if (file.fail())
             {
                 throw runtime_error("No files to search for");
@@ -307,7 +231,6 @@ public:
                 if (this->trn == searchQuery)
                 {
                     foundIndex = appID;
-                    retrieveApplication(i);
                     break;
                 }
             }
@@ -326,7 +249,7 @@ public:
         try
         {
             // ofstream raFile(filename, ios::binary | ios::app);
-            ofstream raFile(filename, ios::binary | ios::out);
+            ofstream raFile(appFilename, ios::binary | ios::out);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");
@@ -341,11 +264,48 @@ public:
         }
     }
 
+    void DeleteApplication()
+    {
+        int Userinput;
+        cout << "Enter the Applicants Tax Registration Number: " << endl;
+        cin >> Userinput;
+
+        int key = findTrn(Userinput);
+
+        Applicant record;
+        bool was_removed = false;                     // was at least one record removed
+        ifstream fin(appFilename, ios::binary);       // open file in binary mode for reading
+        ofstream fout("tmp_record.dat", ios::binary); // create temporary file to write records that should not be deleted to it, and then replace files
+        while (fin.read((char *)&record, sizeof(Applicant)))
+        {
+            if (record.appID != key)
+            {                                                         // if the record does not match
+                fout.write((const char *)&record, sizeof(Applicant)); // write the value to the temporary file
+            }
+            else
+            {
+                was_removed = true; // the record was removed
+            }
+        }
+        if (!was_removed)
+        {                                                                 // if nothing was deleted
+            cout << "No records with key '" << key << "' found." << endl; // inform the user
+        }
+        else
+        {
+            cout << "Records with key '" << key << "' have been deleted." << endl; // inform the user of successful deletion
+        }
+        fin.close();                                   // close the input file
+        fout.close();                                  // close the output file
+        remove(appFilename.c_str());                   // delete the old main file
+        rename("tmp_record.dat", appFilename.c_str()); // rename the temporary file to the main one
+    }
+
     void retrieveApplication(int idx)
     {
         try
         {
-            fstream raFile(filename, ios::in | ios::binary);
+            fstream raFile(appFilename, ios::in | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot retrieve record");
@@ -370,11 +330,11 @@ public:
         }
     }
 
-    void initialiseApplicantList()
+    void initialiseList()
     {
         try
         {
-            ifstream raFile(filename, ios::in | ios::binary);
+            ifstream raFile(appFilename, ios::in | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot read database");
@@ -408,7 +368,7 @@ public:
     {
         try
         {
-            ofstream raFile(filename, ios::out | ios::binary);
+            ofstream raFile(appFilename, ios::out | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("database cannot be created ");

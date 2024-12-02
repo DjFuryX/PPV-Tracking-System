@@ -32,11 +32,15 @@ void writeFixedLengthString(char attribute[], string value)
 
 void getInput(istream &stream, char uservalue[])
 {
-    
-    stream >> ws;//clear whitespace characters
-    stream.getline(uservalue, maxStringsize);
-    cout << "You entered: " << uservalue<<endl;
 
+    stream >> ws; // clear whitespace characters
+    stream.getline(uservalue, maxStringsize);
+
+    if (stream.fail())
+    {
+
+        throw runtime_error("Invalid Input Please Try again");
+    }
 }
 
 #endif

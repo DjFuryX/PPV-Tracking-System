@@ -13,26 +13,23 @@ class JCFOfficer : public User
 {
 private:
   int badgenumber;
-  char firstname[35];
-  char lastname[35];
-  char assignedStation[50];
+  char officerName[maxStringsize];
+  char assignedStation[maxStringsize];
 
 public:
   // default constructor//
   JCFOfficer()
   {
     badgenumber = 0;
-    writeFixedLengthString(firstname, "NameNotSet");
-    writeFixedLengthString(lastname, "NameNotSet");
-    writeFixedLengthString(assignedStation, "StationNot set");
+    writeFixedLengthString(officerName, "NameNotSet");
+    writeFixedLengthString(assignedStation, "StationNotSet");
   }
 
   // primary constructor
-  JCFOfficer(int bnum, string fn, string ln, string station)
+  JCFOfficer(int bnum, string , string name, string station)
   {
     badgenumber = bnum;
-    writeFixedLengthString(firstname, fn);
-    writeFixedLengthString(lastname, ln);
+    writeFixedLengthString(officerName, name);
     writeFixedLengthString(assignedStation, station);
   }
 
@@ -40,37 +37,59 @@ public:
   JCFOfficer(JCFOfficer &officer)
   {
     badgenumber = officer.badgenumber;
-    writeFixedLengthString(firstname, officer.firstname);
-    writeFixedLengthString(lastname, officer.lastname);
+    writeFixedLengthString(officerName,officer.officerName);
     writeFixedLengthString(assignedStation, officer.assignedStation);
   }
 
-  // Login function
+  // Setters
+  void setBadgeNumber(int bnum)
+  {
+    if (bnum > 0)
+    {
+      badgenumber = bnum;
+    }
+    else
+    {
+      cout << "Badge number must be greater than 0. Please re-enter a valid number" << endl;
+    }
+  }
+
+  void setName(const string &fnString)
+  {
+    writeFixedLengthString(officerName,fnString);
+  }
+
+
+  void setAssignedStation(const string &station)
+  {
+    writeFixedLengthString(assignedStation, station);
+  }
+
+
+
+
+ // Login function
   void Login() override
   {
     try
     {
       // Display JCF Officers login
+      cout << "Name: " << officerName << endl;
+      cout << "Password: " << badgenumber << endl;
       cout << "\n\t\t +----------------------------+ JCF Officer Login +----------------------------+\n"
            << endl;
-      cout << "\t\tPlease enter Badge Number:\t";
-      int enteredBadgeNumber;
-      cin >> enteredBadgeNumber; // Input the badge number
-
+      cout << "\t\tPlease enter User Name:\t";
+      setUserName(cin);
       cout << "\t\tPlease enter Password:\t";
-      int enteredPassword;    // Password as integer
-      cin >> enteredPassword; // Input the password
+      setPassword(cin);
+   
 
-      if (enteredBadgeNumber <= 0 || enteredPassword <= 0)
-      {
-        throw runtime_error("Invalid badge number or password. Please try again.");
-      }
-
+    
       // Check if entered badge number and password are correct
-      if (enteredBadgeNumber == badgenumber && enteredPassword == getPassword())
+      if (strcmp(username,officerName)== 0  && getPassword() == badgenumber)
       {
-        cout << "Login successful! Welcome, JCF Officer " << firstname << " " << lastname << "." << endl;
-        this->processOfficerHandler();
+        cout << "Login successful! Welcome, JCF Officer " <<officerName<< endl;
+        this->JCFHandler();
         system("pause");
       }
       else
@@ -87,40 +106,9 @@ public:
     }
   }
 
-  // Setters
-  void setBadgeNumber(int bnum)
-  {
-    if (bnum > 0)
-    {
-      badgenumber = bnum;
-    }
-    else
-    {
-      cout << "Badge number must be greater than 0. Please re-enter a valid number" << endl;
-    }
-  }
+   void JCFHandler(){
 
-  // copy at most 35 characters from string to firstname
-  void setFirstName(const string &fnString)
-  {
-    size_t length = fnString.size();
-    length = (length < 35 ? length : 34);
-    fnString.copy(firstname, length);
-    firstname[length] = '\0'; // Null-terminate the string
-  }
 
-  void setLastName(const string &lnString)
-  {
-    // copy at most 35 characters from string to lastname
-    size_t length = lnString.size();
-    length = (length < 35 ? length : 34);
-    lnString.copy(lastname, length);
-    lastname[length] = '\0'; // append null character to firstname
-  }
-
-  void setAssignedStation(const string &station)
-  {
-    writeFixedLengthString(assignedStation, station);
   }
 
   // Add ticket method
