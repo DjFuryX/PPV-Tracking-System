@@ -16,7 +16,7 @@ const int MaxAppRecord = 500;
 const string filename = "ApplicationList.dat";
 int numApplicationSaved = 0;
 
-class Applicant:Driver
+class Applicant : public Driver
 {
 
 private:
@@ -27,7 +27,7 @@ private:
 
 public:
     Applicant()
-    :Driver()
+        : Driver()
     {
         appID = 100;
         trn = 0;
@@ -37,7 +37,7 @@ public:
         writeFixedLengthString(denyReason, "NotSet");
     }
 
-     int getappID()
+    int getappID()
     {
         return appID;
     }
@@ -47,7 +47,6 @@ public:
         string userInput;
         try
         {
-            stream.ignore();
             stream >> userInput;
 
             for (auto &x : userInput)
@@ -71,11 +70,17 @@ public:
 
     void CreateApplication()
     {
+        cout << "Please Enter Applicants TRN" << endl;
         setTrn();
+        cout << "Please Enter Applicant's Full Name" << endl;
         setName();
+        cout << "Please Enter Applicant's Date of Birth" << endl;
         setDob();
+      cout << "Please Enter Applicant's Contact Number" << endl;
         setContactNumber();
+           cout << "Please Enter Applicant's Address" << endl;
         setAddress();
+        cout << "Please Enter Applicant's Email Address" << endl;
         setEmailAddress();
         cout << "Did the driver cause any accident(s) within the last two years?\n Y/N: " << endl;
         recentAccident = setQualification(cin);
@@ -115,14 +120,14 @@ public:
 
         int key = findTrn(Userinput);
 
-        Applicant record;                             
-        bool was_removed = false;             // was at least one record removed
-        ifstream fin(filename, ios::binary);       // open file in binary mode for reading
+        Applicant record;
+        bool was_removed = false;                     // was at least one record removed
+        ifstream fin(filename, ios::binary);          // open file in binary mode for reading
         ofstream fout("tmp_record.dat", ios::binary); // create temporary file to write records that should not be deleted to it, and then replace files
         while (fin.read((char *)&record, sizeof(Applicant)))
         {
             if (record.appID != key)
-            {                                                 // if the record does not match
+            {                                                         // if the record does not match
                 fout.write((const char *)&record, sizeof(Applicant)); // write the value to the temporary file
             }
             else
@@ -138,12 +143,46 @@ public:
         {
             cout << "Records with key '" << key << "' have been deleted." << endl; // inform the user of successful deletion
         }
-        fin.close();                    // close the input file
-        fout.close();                   // close the output file
+        fin.close();                                // close the input file
+        fout.close();                               // close the output file
         remove(filename.c_str());                   // delete the old main file
         rename("tmp_record.dat", filename.c_str()); // rename the temporary file to the main one
     }
 
+    void showAllApplicants()
+    {
+
+        try
+        {
+            ifstream raFile(filename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot retrieve record");
+            }
+                cout << "Applications Saved: " << numApplicationSaved << endl;
+            for (int index = 0; index < numApplicationSaved; index++)
+            {
+                
+                raFile.seekg((index) * sizeof(*this));
+                raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+                Display();
+            }
+
+            if (raFile)
+            {
+                cout << "all characters read successfully." << endl;
+            }
+            else
+            {
+                cout << "error: only " << raFile.gcount() << " could be read" << endl;
+            }
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
     void Display()
     {
         cout << "Applicant's Id: " << appID << endl;
@@ -174,7 +213,8 @@ public:
         cout << "\n\t\t | " CYN "2." RST "   Update Application                                                         |" << endl;
         cout << "\n\t\t | " CYN "3." RST "    Delete Application                                                        |" << endl;
         cout << "\n\t\t | " CYN "4." RST "    Reject Application                                                        |" << endl;
-        cout << "\n\t\t | " CYN "4." RST "    Check Application Status                                                  |" << endl;
+        cout << "\n\t\t | " CYN "5." RST "    Check Application Status                                                  |" << endl;
+        cout << "\n\t\t | " CYN "6." RST "    Show all Applicants                                                       |" << endl;
         cout << "\n\t\t | " CYN "0." RST "    Exit                                                                      |" << endl;
         cout << "\t\t +---------------------------------------------------------------------------------+" << endl;
         cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl; // prompts for user choice
@@ -184,11 +224,10 @@ public:
         return choice;
     }
 
-    void applicantHandler()
+    virtual void applicantHandler()
     {
         int option = this->ShowMenu(); // get user option
 
-        Applicant *currApplicant = new Applicant();
 
         while (option != 0)
         { // Start while loop for main menu
@@ -196,13 +235,16 @@ public:
             switch (option)
             { // case structure is used to determine option selected
             case 1:
-                currApplicant->CreateApplication();
+                this->CreateApplication();
                 break;
             case 2:
-                currApplicant->UpdateApplication();
+                this->UpdateApplication();
                 break;
             case 3:
-                currApplicant->DeleteApplication();
+                this->DeleteApplication();
+                break;
+            case 6:
+                this->showAllApplicants();
                 break;
             default: // if an invalid number is entered
                 cout << "Invalid option chosen" << endl;
@@ -228,7 +270,7 @@ public:
         cout << "\n\t\t | " CYN "2." RST "   Change TRN                                                       |" << endl;
         cout << "\n\t\t | " CYN "3." RST "   Change Address                                                        |" << endl;
         cout << "\n\t\t | " CYN "4." RST "    Change Email Address                                                        |" << endl;
-        cout << "\n\t\t | " CYN "4." RST "    Change Phone Number                                                 |" << endl;
+        cout << "\n\t\t | " CYN "5." RST "    Change Phone Number                                                 |" << endl;
         cout << "\n\t\t | " CYN "0." RST "    Exit                                                                      |" << endl;
         cout << "\t\t +---------------------------------------------------------------------------------+" << endl;
         cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl; // prompts for user choice
@@ -266,7 +308,6 @@ public:
                 break;
             } // end switch case
             SaveApplication(appID);
-            system("pause");
             option = this->updateMenu(); // get user option
         }
     }

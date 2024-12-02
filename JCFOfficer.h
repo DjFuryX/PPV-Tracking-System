@@ -229,7 +229,8 @@ public:
       outputLine(cout, newTicket); // display the ticket record
 
       // request the officer to enter new data to display updated ticket report
-      cout << "Enter ticket issue date (YYYY-MM-DD): " cin >> issueDate;
+      cout << "Enter ticket issue date (YYYY-MM-DD): ";
+       cin >> issueDate;
 
       cout << "Enter offence code: " cin >> offenceCode;
 

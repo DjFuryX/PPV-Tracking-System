@@ -31,6 +31,7 @@ public:
     void SetDob()
     {
         cout << "day: "<<endl;
+
         cin >> day;
         cout << "month: "<<endl;
         cin >> month;

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <limits>
 using namespace std;
 
 #ifndef Auxillary_H
@@ -17,7 +18,7 @@ const int maxStringsize = 50;
 
 void writeFixedLengthString(char attribute[], string value)
 {
-    unsigned int maxLength=50;
+    unsigned int maxLength = 50;
     unsigned int idx, length;
 
     length = (value.length() > maxLength) ? (maxLength - 1) : value.length();
@@ -31,12 +32,11 @@ void writeFixedLengthString(char attribute[], string value)
 
 void getInput(istream &stream, char uservalue[])
 {
-    string userInput;
-    stream.ignore();
-    getline(stream, userInput,'\n');
-    writeFixedLengthString(uservalue,userInput);
+    
+    stream >> ws;//clear whitespace characters
+    stream.getline(uservalue, maxStringsize);
+    cout << "You entered: " << uservalue<<endl;
+
 }
-
-
 
 #endif
