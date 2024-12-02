@@ -12,6 +12,7 @@ int main()
     User *userPtr = nullptr;
     Applicant *applicant = new Applicant();
     applicant->initialiseApplicantList();
+    
 
     /*int option = 0;  // Initialize option to 0 (safe default value)
 

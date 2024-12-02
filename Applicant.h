@@ -198,6 +198,37 @@ public:
         cout << "Police Record: " << (policeRecord == 1 ? "True" : "False") << endl;
         cout << "------------------" << endl;
     }
+   void updateMenuHandler()
+    {
+        int option = updateMenu(); // get user option
+
+        while (option != 0)
+        { // Start while loop for main menu
+
+            switch (option)
+            { // case structure is used to determine option selected
+            case 1:
+                setName();
+                break;
+            case 2:
+                setTrn();
+                break;
+            case 3:
+                setAddress();
+                break;
+            case 4:
+                setEmailAddress();
+                break;
+            case 5:
+                setContactNumber();
+            default: // if an invalid number is entered
+                cout << "Invalid option chosen" << endl;
+                break;
+            } // end switch case
+            SaveApplication(appID);
+            option = this->updateMenu(); // get user option
+        }
+    }
 
     int ShowMenu()
     {
@@ -224,7 +255,7 @@ public:
         return choice;
     }
 
-    virtual void applicantHandler()
+    virtual void handler()
     {
         int option = this->ShowMenu(); // get user option
 
@@ -256,61 +287,7 @@ public:
         }
     }
 
-    int updateMenu()
-    {
-        int choice;
-        // Get current date and time
-        time_t timestamp;
-        time(&timestamp);
-        system("cls");                                 // clears the screen
-        cout << "Date: " << ctime(&timestamp) << endl; // print current date and time
-        /*prints a menu so the user can select their desired choice*/
-        cout << "\n\t\t +--------------------------------+ Application Menu +--------------------------------+" << endl;
-        cout << "\t\t | " CYN "1." RST "    Change Name                                                           |" << endl;
-        cout << "\n\t\t | " CYN "2." RST "   Change TRN                                                       |" << endl;
-        cout << "\n\t\t | " CYN "3." RST "   Change Address                                                        |" << endl;
-        cout << "\n\t\t | " CYN "4." RST "    Change Email Address                                                        |" << endl;
-        cout << "\n\t\t | " CYN "5." RST "    Change Phone Number                                                 |" << endl;
-        cout << "\n\t\t | " CYN "0." RST "    Exit                                                                      |" << endl;
-        cout << "\t\t +---------------------------------------------------------------------------------+" << endl;
-        cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl; // prompts for user choice
-        cin >> choice;
-        system("cls");
-        // clears the screen
-        return choice;
-    }
-
-    void updateMenuHandler()
-    {
-        int option = this->updateMenu(); // get user option
-
-        while (option != 0)
-        { // Start while loop for main menu
-
-            switch (option)
-            { // case structure is used to determine option selected
-            case 1:
-                setName();
-                break;
-            case 2:
-                setTrn();
-                break;
-            case 3:
-                setAddress();
-                break;
-            case 4:
-                setEmailAddress();
-                break;
-            case 5:
-                setContactNumber();
-            default: // if an invalid number is entered
-                cout << "Invalid option chosen" << endl;
-                break;
-            } // end switch case
-            SaveApplication(appID);
-            option = this->updateMenu(); // get user option
-        }
-    }
+   
 
     int findTrn(int searchQuery)
     {
@@ -349,7 +326,7 @@ public:
         try
         {
             // ofstream raFile(filename, ios::binary | ios::app);
-            ofstream raFile(filename, ios::binary | ios::in);
+            ofstream raFile(filename, ios::binary | ios::out);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");

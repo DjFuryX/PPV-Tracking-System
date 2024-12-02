@@ -65,11 +65,11 @@ public:
             { // case structure is used to determine option selected
             case 1:
                 currFunction = new Applicant();
-                currFunction->applicantHandler();
+                currFunction->handler();
                 break;
             case 2:
                 currFunction = new Driver();
-                currFunction->Driver::applicantHandler();
+                currFunction->Driver::handler();
 
                 break;
 
@@ -77,8 +77,6 @@ public:
                 cout << "Invalid option chosen" << endl;
                 break;
             } // end switch case
-
-            system("pause");
             option = this->ShowMenu(); // get user option
         }
     }
