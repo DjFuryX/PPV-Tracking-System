@@ -118,7 +118,7 @@ public:
         }
     }
 
-    void showTicketsByParish(string ticketParish)
+    void showAllTickets(int driverTrn)
     {
 
         try
@@ -129,16 +129,17 @@ public:
                 throw runtime_error("cannot retrieve record");
             }
             cout << "Tickets Saved: " << ticketsSaved << endl;
+
             for (int index = 0; index < ticketsSaved; index++)
             {
 
                 raFile.seekg((index) * sizeof(*this));
                 raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
-
-                if (stricmp(courtLocation.GetParish().c_str(), ticketParish.c_str()) == 0)
-                {
+                if(this->trn==driverTrn){
                     viewTicketReport();
                 }
+
+              
             }
             raFile.close();
         }

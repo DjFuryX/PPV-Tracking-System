@@ -195,6 +195,36 @@ public:
         }
     }
 
+    void showAllDrivers(string driverParish)
+    {
+        Ticket *record;
+
+        try
+        {
+            ifstream raFile(driverFilename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot retrieve record");
+            }
+            cout << "Drivers Saved: " << numDriverSaved << endl;
+            for (int index = 0; index < numDriverSaved; index++)
+            {
+
+                raFile.seekg((index) * sizeof(*this));
+                raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+                if (stricmp(currAddr.GetParish().c_str(), driverParish.c_str()) == 0)
+                {
+                   record->showAllTickets(trn);
+                }
+            }
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
+
     int updateMenu()
     {
         int choice;
@@ -214,7 +244,7 @@ public:
         cout << "\n\t\t | " CYN "0." RST "  Exit                                                   |" << endl;
         cout << "\t\t +------------------------------------------------------------+" << endl;
         cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;
- // prompts for user choice
+        // prompts for user choice
         cin >> choice;
         system("cls");
         // clears the screen
@@ -290,13 +320,13 @@ public:
             switch (option)
             { // case structure is used to determine option selected
             case 1:
-                
+
                 break;
             case 2:
-          
+
                 break;
             case 3:
-          
+
                 break;
             case 4:
                 break;
@@ -305,7 +335,7 @@ public:
 
             case 6:
                 break;
-                
+
             default: // if an invalid number is entered
                 cout << "Invalid option chosen" << endl;
                 break;
@@ -342,7 +372,6 @@ public:
     void Login()
     {
 
-
         try
         {
             // Display Driver's login prompt
@@ -367,14 +396,12 @@ public:
             {
                 cout << "Login successful! Welcome, Driver " << name << "." << endl;
                 Driver::handler();
-                
-                // You can add additional functionality here (e.g., viewing tickets, fines, etc.)
 
+                // You can add additional functionality here (e.g., viewing tickets, fines, etc.)
             }
             else
             {
                 cout << "Invalid TRN or password. Please try again." << endl;
- 
             }
         }
         catch (runtime_error &e)

@@ -4,7 +4,6 @@
 #include <string>
 #include <cstdlib>
 #include <iomanip>
-
 #include "Ticket.h"
 #include "User.h"
 #include "Auxillary.h"
@@ -126,6 +125,9 @@ public:
         ticketsParish();
 
         break;
+      case 7:
+        viewTickets();
+        break;
       default: // if an invalid number is entered
         cout << "Invalid option chosen" << endl;
         break;
@@ -151,6 +153,7 @@ public:
     cout << "\n\t\t | " CYN "4." RST "  View Tickets Parish                                          |" << endl;
     cout << "\n\t\t | " CYN "5." RST "  View Offenders Tickets-Due                                   |" << endl;
     cout << "\n\t\t | " CYN "6." RST "  Check Warrant Status                                         |" << endl;
+    cout << "\n\t\t | " CYN "7." RST "  Show All Tickets                                             |" << endl;
     cout << "\n\t\t | " CYN "0." RST "  Exit                                                         |" << endl;
     cout << "\t\t +------------------------------------------------------------------+" << endl;
     cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;  // prompts for user choice
@@ -190,7 +193,7 @@ public:
   {
     Ticket *ticket = new Ticket();
     cout << "Viewing tickets that are due..." << endl;
-    ticket->showAllTickets(" warrant outstanding");
+    ticket->showAllTickets("warrant outstanding");
   }
 
   // Function to view all tickets
@@ -205,14 +208,13 @@ public:
   // Function to view outstanding tickets from drivers in each parish
   void ticketsParish()
   {
-    Ticket *ticket = new Ticket();
+    Driver *driver = new Driver();
     char ticketParish[maxStringsize];
-
-    cout << "Viewing outstanding tickets in each parish..." << endl;
     cout << "Please Enter Parish Name" << endl;
     getInput(cin, ticketParish);
-
-    ticket->showTicketsByParish(ticketParish);
+  
+    cout << "---------------Tickets in "<<ticketParish<<"--------------------"<< endl;
+    driver->showAllDrivers(ticketParish);
   }
 
   void initialiseList() override {};

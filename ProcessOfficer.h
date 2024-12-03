@@ -48,7 +48,6 @@ public:
 
             cout << "Login successful" << endl;
             this->processOfficerHandler();
-            system("pause");
         }
     }
 
@@ -64,7 +63,7 @@ public:
             switch (option)
             { // case structure is used to determine option selected
             case 1:
-                currFunction = new Applicant();// test for errors
+                currFunction = new Applicant(); // test for errors
                 currFunction->handler();
                 break;
             case 2:
@@ -95,13 +94,12 @@ public:
         cout << "\n\t\t | " CYN "0." RST "  Exit                                                       |" << endl;
         cout << "\t\t +----------------------------------------------------------------+" << endl;
         cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;
- // prompts for user choice
+        // prompts for user choice
         cin >> choice;
         system("cls");
         return choice;
         // clears the screen
     }
-
 
     int ShowdriverMenu()
     {
@@ -131,13 +129,11 @@ public:
         return choice;
     }
 
-
     void driverHandler()
     {
         Driver *currFunction = new Driver();
 
         int option = this->ShowdriverMenu(); // get user option
-
 
         while (option != 0)
         { // Start while loop for main menu
@@ -175,9 +171,8 @@ public:
             option = this->ShowdriverMenu(); // get user option
         }
     };
-   
 
-    void  initialiseList(){};
+    void initialiseList() {};
 };
 
 #endif
