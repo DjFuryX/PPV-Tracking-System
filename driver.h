@@ -420,8 +420,7 @@ public:
 
         try
         {
-            // ofstream raFile(driverFilename, ios::binary | ios::app);
-            ofstream raFile(driverFilename, ios::binary | ios::out);
+            ofstream raFile(driverFilename, ios::binary | ios::app);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");

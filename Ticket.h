@@ -21,8 +21,8 @@ private:
     int trn;
     char issuingOfficer[maxStringsize];
     char licensePlateNumber[maxStringsize];
+    char status[maxStringsize];
     float ticketAmount;
-    Fine ticketFine;
     Date dueDate;
     Date courtDate;
     Date issueDate;
@@ -36,38 +36,25 @@ public:
         writeFixedLengthString(licensePlateNumber, "00-0000");
         ticketAmount = 0.0;
         trn = 0;
+        writeFixedLengthString(status, "Notset");
     }
-
-    // Primary Constructor
-
-    /* Ticket(int ticNum, string issueDate, string offenceDes, string offenceCode, string plateNumber,
-           float tAmount, string due, string court, string issueOfficer, string cLocation)
-    {
-        ticketNumber = ticNum;
-        ticketIssueDate = issueDate;
-        ticketOffenceCode = offenceCode;
-        ticketOffenceDescription = offenceDes;
-        licensePlateNumber = plateNumber;
-        ticketAmount = tAmount;
-        dueDate = due;
-        courtDate = court;
-        issuingOfficer = issueOfficer;
-        courtLocation = cLocation;
-    } */
 
     // Getters
     void createTicket(char officer[], char stationParish[], int driverTrn)
     {
+        ticketNumber = ticketsSaved;
         cout << "Please Enter License Plate Number: " << endl;
         getInput(cin, licensePlateNumber);
         char option[1];
+
         do
         {
-            ticketFine.addFine(ticketNumber);
-            ticketAmount+=ticketFine.getAmount();
+            Fine newfine;
+            newfine.addFine(ticketNumber);
+            ticketAmount += newfine.getAmount();
+
             cout << "Would you like to add another fine (y/n)" << endl;
             getInput(cin, option);
-
             option[0] = tolower(option[0]);
 
         } while (strcmp(option, "y") == 0);
@@ -76,31 +63,32 @@ public:
         issueDate.setDate();
         cout << "Please set tickect due date" << endl;
         dueDate.setDate();
-
+        writeFixedLengthString(status, "unpaid");
         trn = driverTrn;
         writeFixedLengthString(issuingOfficer, officer);
         courtLocation.setParish(stationParish);
-        
-        ticketNumber=ticketsSaved;
         saveTicket(ticketNumber);
         ticketsSaved++;
-
     }
 
     // Generates Ticket Report of Driver
     void viewTicketReport()
     {
-        cout << "Ticket Number: " << ticketNumber << endl;
+        cout << "Offender Trn: " << trn << endl;
         cout << "Issue Date: " << endl;
         issueDate.Display();
         cout << "License Plate Number: " << licensePlateNumber << endl;
         cout << "Ticket Amount: $" << ticketAmount << endl;
+        cout << "Ticket Status: $" << status << endl;
         cout << "Due Date: " << dueDate << endl;
-        cout << "Court Date: " << courtDate << endl;
+        // cout << "Court Date: " << courtDate << endl;
         cout << "Issuing Officer: " << issuingOfficer << endl;
-        cout << "Court Location: " << courtLocation.GetParish() << endl;
-        cout<<"Fines: "<<endl;
-        ticketFine.showAll(ticketNumber);
+        // cout << "Court Location: " << courtLocation.GetParish() << endl;
+        cout << RED << "---------------------" << endl;
+        cout << "Fines: " << endl;
+        Fine *fine = new Fine();
+        fine->showAll(ticketNumber);
+        cout << "---------------------" << RST << endl;
     }
 
     void showAllTickets()
@@ -116,6 +104,7 @@ public:
             cout << "Tickets Saved: " << ticketsSaved << endl;
             for (int index = 0; index < ticketsSaved; index++)
             {
+                setTicketStatus();
 
                 raFile.seekg((index) * sizeof(*this));
                 raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
@@ -129,13 +118,83 @@ public:
         }
     }
 
+    void showTicketsByParish(string ticketParish)
+    {
+
+        try
+        {
+            ifstream raFile(ticketFilename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot retrieve record");
+            }
+            cout << "Tickets Saved: " << ticketsSaved << endl;
+            for (int index = 0; index < ticketsSaved; index++)
+            {
+
+                raFile.seekg((index) * sizeof(*this));
+                raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+
+                if (stricmp(courtLocation.GetParish().c_str(), ticketParish.c_str()) == 0)
+                {
+                    viewTicketReport();
+                }
+            }
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
+
+    void showAllTickets(string ticketStatus)
+    {
+
+        try
+        {
+            ifstream raFile(ticketFilename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot retrieve record");
+            }
+            cout << "Tickets Saved: " << ticketsSaved << endl;
+            for (int index = 0; index < ticketsSaved; index++)
+            {
+
+                raFile.seekg((index) * sizeof(*this));
+                raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+
+                setTicketStatus();
+
+                if (strcmp(this->status, ticketStatus.c_str()) == 0)
+                {
+
+                    viewTicketReport();
+                }
+            }
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
+
+    void setTicketStatus()
+    {
+        if (issueDate.daysToDueDate(dueDate) >= 21)
+        {
+            writeFixedLengthString(this->status, "warrant outstanding");
+        }
+    }
+
     void saveTicket(int ticketId)
     {
 
         try
         {
-            // ofstream raFile(driverFilename, ios::binary | ios::app);
-            ofstream raFile(ticketFilename, ios::binary | ios::out);
+            ofstream raFile(ticketFilename, ios::binary | ios::app);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");

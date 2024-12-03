@@ -17,7 +17,7 @@ private:
     char offenceCode[maxStringsize];
     char offenceDescription[100];
     float fineAmount;
-    int Id;
+    int fineId;
     int ticketId;
 
 public:
@@ -27,8 +27,8 @@ public:
         writeFixedLengthString(offenceCode, "Notset");
         writeFixedLengthString(offenceDescription, "notSet");
         fineAmount = 0.0;
-        int Id = -1;
-        int ticketId=0;
+        int fineId = -1;
+        int ticketId = 0;
     }
 
     Fine(string code, string description, float fineAmt, int Fineid)
@@ -36,7 +36,7 @@ public:
         writeFixedLengthString(offenceCode, code);
         writeFixedLengthString(offenceDescription, description);
         fineAmount = fineAmt;
-        Id = Fineid;
+        fineId = Fineid;
     }
 
     void addFine(int ticketNumber)
@@ -47,9 +47,9 @@ public:
         getInput(cin, offenceDescription);
         cout << "Please Enter Fine Amount" << endl;
         cin >> fineAmount;
-        ticketId=ticketNumber;
-        Id = finesSaved;
-        saveFine(Id);
+        ticketId = ticketNumber;
+        fineId = finesSaved;
+        saveFine(fineId);
         finesSaved++;
     }
 
@@ -85,41 +85,40 @@ public:
         fineAmount = amount;
     }
 
-    void displayFine(Fine fine)
+    void displayFine()
     {
-        cout << "Fine Offence Code: " << fine.offenceCode << endl;
-        cout << "Fine Offence Description: " << fine.offenceDescription << endl;
-        cout << "Fine Fine Amount: $" << fine.fineAmount << endl;
+        cout << "Fine Ticket Number: " << ticketId << endl;
+        cout << "Fine Offence Code: " << offenceCode << endl;
+        cout << "Fine Offence Description: " << offenceDescription << endl;
+        cout << "Fine Amount: $"<< fineAmount << endl;
     }
 
-
-    float showAll(int ticketID){
-        Fine record;
-
-        float total=0;
-
-         try
+    void showAll(int ticketID)
+    {
+    
+        try
         {
-            fstream raFile(filename, ios::in | ios::binary);
+            ifstream raFile(filename, ios::in | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot retrieve record");
             }
 
-            for(int index=0;index<finesSaved;index++){
-                raFile.seekg((index) * sizeof(Fine));
-                raFile.read(reinterpret_cast<char *>(&record), sizeof(Fine));
-                displayFine(record);
+            for (int index = 0; index < finesSaved; index++)
+            {
+                raFile.seekg((index) * sizeof(*this));
+                raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+                if (ticketId == ticketID)
+                {
+                    displayFine();
+                }
             }
-
-          
             raFile.close();
         }
         catch (runtime_error &e)
         {
             cerr << e.what() << endl;
         }
-        return total;
     }
 
     void saveFine(int fineId)
@@ -127,8 +126,7 @@ public:
 
         try
         {
-            // ofstream raFile(driverFilename, ios::binary | ios::app);
-            ofstream raFile(filename, ios::binary | ios::out);
+            ofstream raFile(filename, ios::binary | ios::app);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");
@@ -163,7 +161,7 @@ public:
         }
     }
 
-     void initialiseList()
+    void initialiseList()
     {
         try
         {
@@ -181,11 +179,11 @@ public:
                     raFile.seekg((idx) * sizeof(a1));
                     raFile.read(reinterpret_cast<char *>(&a1), sizeof(a1));
 
-                    if (a1.Id != -1)
+                    if (a1.fineId != -1)
                     {
                         finesSaved++;
                     }
-                    a1.Id = -1;
+                    a1.fineId = -1;
                 }
 
                 cout << "Number of fines saved: " << finesSaved << endl;
@@ -223,38 +221,3 @@ public:
 };
 
 #endif
-
-/*Link to Ticket Method
-it created a linkage between fine and ticket
-such copying or getting the offense code and description and
-fine amount from the ticket object to fine object
-
-
-so it pretty much allows the fine to accurately reflect violation details
-from the ticket useful when fine is issued directly based on a ticket offense */
-
-/*Main to Test
-    #include <iostream>
-    #include <string.h>
-    sing namespace std;
-
-    #include <Ticket.h>
-    #include <Fine.h>
-
-    int main() {
-    // Creating a Ticket instance
-    Ticket ticket(12345, "2024-11-01", "1001", "Speeding", "AB-1234", 15000.0,
-                  "2024-11-30", "2024-12-15", "Officer Smith", "Spanish Town Court");
-
-    // Fine instance that link it to the Ticket
-    Fine fine;
-    fine.linkToTicket(ticket);
-
-    // Displaying ticket and fine information
-    cout << "Ticket Report:" << endl;
-    ticket.viewTicketReport();
-    cout << "\nFine Details:" << endl;
-    fine.displayFine();
-
-    return 0;
-}*/

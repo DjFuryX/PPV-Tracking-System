@@ -85,8 +85,8 @@ public:
       if (strcmp(username, officerName) == 0 && getPassword() == badgenumber)
       {
         cout << "Login successful! Welcome, JCF Officer " << officerName << endl;
+
         this->JCFHandler();
-        system("pause");
       }
       else
       {
@@ -118,9 +118,13 @@ public:
       case 2:
         break;
 
+      case 3:
+        viewTicketsDue();
+        break;
+
       case 4:
         ticketsParish();
-        
+
         break;
       default: // if an invalid number is entered
         cout << "Invalid option chosen" << endl;
@@ -149,7 +153,7 @@ public:
     cout << "\n\t\t | " CYN "6." RST "  Check Warrant Status                                             |" << endl;
     cout << "\n\t\t | " CYN "0." RST "  Exit                                                             |" << endl;
     cout << "\t\t +-----------------------------------------------------------------------------------+" << endl;
-    cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;  // prompts for user choice
+    cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl; // prompts for user choice
     cin >> choice;
     system("cls");
     // clears the screen
@@ -184,24 +188,31 @@ public:
   // Function to view tickets that are due
   void viewTicketsDue()
   {
+    Ticket *ticket = new Ticket();
     cout << "Viewing tickets that are due..." << endl;
+    ticket->showAllTickets(" warrant outstanding");
   }
 
   // Function to view all tickets
   void viewTickets()
   {
-
+    Ticket *ticket = new Ticket();
     cout << "Viewing all tickets..." << endl;
+
+    ticket->showAllTickets();
   }
 
   // Function to view outstanding tickets from drivers in each parish
   void ticketsParish()
   {
+    Ticket *ticket = new Ticket();
+    char ticketParish[maxStringsize];
+
     cout << "Viewing outstanding tickets in each parish..." << endl;
-    Ticket *ticket=new Ticket();
+    cout << "Please Enter Parish Name" << endl;
+    getInput(cin, ticketParish);
 
-    ticket->showAllTickets();
-
+    ticket->showTicketsByParish(ticketParish);
   }
 
   void initialiseList() override {};

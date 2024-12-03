@@ -1,5 +1,4 @@
 #include <iostream>
-#include <time.h>
 using namespace std;
 
 
@@ -12,7 +11,6 @@ private:
     int day;
     int month;
     int year;
-    // time_t fdate;
 public:
     Date()
     {
@@ -72,8 +70,12 @@ public:
     void Display()
     {
         cout << day << "/" << month << "/" << year<<endl;
+    }
 
-        //  cout << ctime(&fdate) << endl;
+    int daysToDueDate(Date date){
+        int currenttotalDays=this->GetDay()+this->GetMonth()*28+this->GetYear()*365;
+        int dueTotalDays=date.GetDay()+date.GetMonth()*28+date.GetYear()*365;
+        return currenttotalDays-dueTotalDays;
     }
 };
 
