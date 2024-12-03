@@ -28,7 +28,7 @@ public:
         year = yr;
     }
 
-    void SetDob()
+    void setDate()
     {
         cout << "day: "<<endl;
 

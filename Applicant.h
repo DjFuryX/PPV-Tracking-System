@@ -74,7 +74,7 @@ public:
         cout << "Please Enter Applicant's Full Name" << endl;
         setName();
         cout << "Please Enter Applicant's Date of Birth" << endl;
-        setDob();
+        setDate();
         cout << "Please Enter Applicant's Contact Number" << endl;
         setContactNumber();
         cout << "Please Enter Applicant's Address" << endl;

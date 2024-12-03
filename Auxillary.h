@@ -38,7 +38,6 @@ void getInput(istream &stream, char uservalue[])
 
     if (stream.fail())
     {
-
         throw runtime_error("Invalid Input Please Try again");
     }
 }

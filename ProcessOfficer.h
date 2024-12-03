@@ -54,7 +54,7 @@ public:
 
     void processOfficerHandler()
     {
-       
+        Driver *currFunction = nullptr;
 
         int option = this->ShowMenu(); // get user option
 
@@ -64,7 +64,7 @@ public:
             switch (option)
             { // case structure is used to determine option selected
             case 1:
-                Applicant *currFunction = new Applicant();// test for errors
+                currFunction = new Applicant();// test for errors
                 currFunction->handler();
                 break;
             case 2:

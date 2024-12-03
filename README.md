@@ -2,5 +2,199 @@
 Automate the approval of applications for PPV licenses based on specific criteria and will be used by the Jamaica Constabulary Force (JCF) to issue tickets to road traffic offenders, record road accidents and store police records
 
 
-ToDo
-* add function in User.h to validate input-> bool CheckInput(type,input,lenght)
+
+
+
+
+  // Function to update a ticket
+  void updateTicket()
+  {
+    cout << "Updating ticket..." << endl;
+
+    // obtain the ticket number for ticket update
+    int ticketnumber{getTicketNumber("Enter Ticket Number:")};
+
+    // move file-position pointer to correct ticket record to file
+    {
+      updateFile.seekg((ticketnumber - 1) * sizeof(Ticket));
+    }
+
+    // create record object and read first record from file
+    Ticket newTicket;
+    updateFile.read(reinterpret_cast<char *>(&newTicket), sizeof(Ticket));
+
+    // update ticket record
+    if (newTicket.getTicketNumber() != 0)
+    {
+      outputLine(cout, newTicket); // display the ticket record
+
+      // request the officer to enter new data to display updated ticket report
+      cout << "Enter ticket issue date (YYYY-MM-DD): ";
+      cin >> issueDate;
+
+      cout << "Enter offence code: " cin >> offenceCode;
+
+      cout << "Enter offence description: " cin.ignore();
+      getline(cin, offenceDesc);
+
+      cout << "Enter license plate number: " cin >> plateNumber;
+
+      cout << "Enter ticket amount: $" cin >> amount;
+
+      cout << "Enter due date (YYYY-MM-DD): " cin >> dueDate;
+
+      cout << "Enter court date (YYYY-MM-DD): " cin >> courtDate;
+
+      cout << "Enter issuing officer's name: " cin.ignore();
+      getline(cin, issuingOfficer);
+
+      cout << "Enter court location: " getline(cin, courtLocation);
+
+      newTicket.setTicketNumber(ticketnumber);
+      newTicket.setTicketIssueDate(issueDate);
+      newTicket.setTicketOffenceCode(offenceCode);
+      newTicket.setTicketOffenceDescription(offenceDesc);
+      newTicket.setLicensePlateNumber(plateNumber);
+      newTicket.setTicketAmount(amount);
+      newTicket.setDueDate(dueDate);
+      newTicket.setCourtDate(courtDate);
+      newTicket.setIssuingOfficer(issuingOfficer);
+      newTicket.setCourtLocation(courtLocation);
+
+      // move file-position pointer to correct ticket record in file
+      {
+        updateFile.seekp((ticketnumber - 1) * sizeof(Ticket));
+      }
+
+      // write updated record over old record in file
+      updateFile.write(reinterpret_cast<const_cast *>(&newTicket), sizeof(Ticket));
+      cout << "Ticket updated successfully!" << endl;
+    }
+    else
+    {
+      // display error if ticket does not show up
+      cerr << "Ticket Number: " << ticketnumber << "has no information." << endl
+    }
+  }
+}
+
+// Function to view Warrant details of each driver
+void
+CheckWarrantStatus()
+{
+
+  cout << "Checking warrant status..." << endl;
+}
+
+void deleteTicket()
+{
+  // obtain the ticket number for ticket update
+  int ticketnumber{getTicketNumber("Enter Ticket to delete:")};
+
+  // move file-position pointer to correct ticket record to file
+  {
+    deleteFromFile.seekg((ticketnumber - 1) * sizeof(Ticket));
+  }
+
+  // create record object and read first record from file
+  Ticket newTicket;
+  deleteFromFile.read(reinterpret_cast<char *>(&newTicket), sizeof(Ticket));
+
+  // delete record, if record exists in file
+  if (newTicket.getTicketNumber() != 0)
+  {
+    Ticket blankticket; // create blank record
+    // move file-position pointer to correct ticket record in file
+    {
+      deleteFromFile.seekp((ticketnumber - 1) * sizeof(Ticket));
+    }
+    // replacing existing ticket record with blank record
+    updateFile.write(reinterpret_cast<const_cast *>(&newTicket), sizeof(Ticket));
+    cout << "Ticket deleted successfully!" << endl;
+
+    cout << "Ticket Number: " << ticketnumber << "deleted.\n";
+  }
+  else
+  {
+    // display error if ticket does not exist
+    cerr << "Ticket Number: " << ticketnumber << "is empty.\n"
+         << endl;
+  }
+};
+
+/*
+
+
+
+
+
+     // Function for adding new ticket
+    void AddTicket(const string &stringNewTicket)
+    {
+        ofstream outTicket{"NewTicket.dat", ios::out | ios::binary};
+
+        // Exit program if output stream could not open file
+        if (!outTicket)
+        {
+            cerr << "File could not be opened!" << endl;
+            exit(EXIT_FAILURE);
+        }
+
+        // Output required number of blank records to file
+        for (int t = 0; t < 100; ++t)
+        {
+            Ticket blankTicket;  // Constructor eliminates each data member
+            outTicket.write(reinterpret_cast<const char *>(&blankTicket), sizeof(JCFOfficer));
+        }
+
+        fstream inOutTicket{"NewTicket.dat", ios::in | ios::out | ios::binary};
+
+        cout << "Enter new ticket number (1 to 100, 0 to end input)\n";
+
+        int ticketnumber
+        cin >> ticketnumber; //read ticket number
+
+
+    // officer enters information which is copied into file
+    while (ticketnumber > 0 && ticketnumber <= 100)
+    {
+
+       officer enters ticket information
+       cout <<"";
+       cin >>
+       cin >>
+       cin >>
+
+
+      // create object for Ticketclass
+      JCFOfficer newticket{};
+
+      // seek position in the file of user specified record
+      /* outTicket.seekp((newticket.getTicketNumber() - 1) * sizeof(JCFOfficer)); */
+
+// write user-specified information in file
+/*outTicket.write(reinterpret_cast<const char*>(&blankTickets), sizeof(JCFOfficer));
+}
+}
+// Function to display the tickets that are due
+void ViewTicketsDue()
+{
+}
+// Function to view tickets
+void ViewTickets()
+{
+}
+// Function to view outstanding tickets from driver in each parish
+void TicketsParish()
+{
+}
+// Function to update ticket
+void updateTicket()
+{
+}
+// Function to view Warrant details of each driver
+void CheckWarrantStatus()
+{
+}
+};
+*/

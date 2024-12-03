@@ -1,69 +1,224 @@
 // Fine Class
 #include <iostream>
+#include "Auxillary.h"
+#include <fstream>
 using namespace std;
 
 #ifndef Fine_h
 #define Fine_h
 
+const string filename = "Fineslist.dat";
+int finesSaved = 0;
+const int Maxfines = 500;
+
 class Fine
 {
 private:
-    string offenceCode;
-    string offenceDescription;
+    char offenceCode[maxStringsize];
+    char offenceDescription[100];
     float fineAmount;
+    int Id;
+    int ticketId;
 
 public:
     // Default Constructor
     Fine()
     {
-        offenceCode = "";
-        offenceDescription = "notSet";
+        writeFixedLengthString(offenceCode, "Notset");
+        writeFixedLengthString(offenceDescription, "notSet");
         fineAmount = 0.0;
+        int Id = -1;
+        int ticketId=0;
     }
 
-    Fine(string Ocode, string description, float fAmount)
+    Fine(string code, string description, float fineAmt, int Fineid)
     {
-        offenceCode = Ocode;
-        offenceDescription = description;
-        fineAmount = fAmount;
+        writeFixedLengthString(offenceCode, code);
+        writeFixedLengthString(offenceDescription, description);
+        fineAmount = fineAmt;
+        Id = Fineid;
+    }
+
+    void addFine(int ticketNumber)
+    {
+        cout << "Please Enter offence code" << endl;
+        getInput(cin, offenceCode);
+        cout << "Please Enter offence Discription" << endl;
+        getInput(cin, offenceDescription);
+        cout << "Please Enter Fine Amount" << endl;
+        cin >> fineAmount;
+        ticketId=ticketNumber;
+        Id = finesSaved;
+        saveFine(Id);
+        finesSaved++;
     }
 
     // Getter Methods
 
-    string getTicketOffenceCode()
+    string getOffenceCode()
     {
         return offenceCode;
     }
 
-    string getTicketOffenceDescription()
+    string getOffenceDescription()
     {
         return offenceDescription;
     }
 
-    // Setter methods for Fine
-
-    void setTicketOffenceDescription(string description)
+    int getAmount()
     {
-        offenceDescription = description;
+        return fineAmount;
     }
-    void setFineAmount(float amount)
+
+    // Setter methods for Fine
+    void setOffenceCode(string code)
+    {
+        writeFixedLengthString(offenceCode, code);
+    }
+
+    void setOffenceDescription(string description)
+    {
+        writeFixedLengthString(offenceDescription, description);
+    }
+    void setAmount(float amount)
     {
         fineAmount = amount;
     }
 
-    // Method to link Fine to a Ticket
-    // void linkToTicket(const Ticket &ticket) {
-    //      offenceCode = ticket.getTicketOffenceCode();         //Get  offence code, description and fine from Ticket
-    //     offenceDescription = ticket.getTicketOffenceDescription();
-    //   fineAmount = ticket.getTicketAmount();
-    //   }
-
-    // Generate Fine Details
-    void displayFine()
+    void displayFine(Fine fine)
     {
-        cout << "Ticket Offence Code: " << offenceCode << endl;
-        cout << "Ticket Offence Description: " << offenceDescription << endl;
-        cout << "Ticket Fine Amount: $" << fineAmount << endl;
+        cout << "Fine Offence Code: " << fine.offenceCode << endl;
+        cout << "Fine Offence Description: " << fine.offenceDescription << endl;
+        cout << "Fine Fine Amount: $" << fine.fineAmount << endl;
+    }
+
+
+    float showAll(int ticketID){
+        Fine record;
+
+        float total=0;
+
+         try
+        {
+            fstream raFile(filename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot retrieve record");
+            }
+
+            for(int index=0;index<finesSaved;index++){
+                raFile.seekg((index) * sizeof(Fine));
+                raFile.read(reinterpret_cast<char *>(&record), sizeof(Fine));
+                displayFine(record);
+            }
+
+          
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+        return total;
+    }
+
+    void saveFine(int fineId)
+    {
+
+        try
+        {
+            // ofstream raFile(driverFilename, ios::binary | ios::app);
+            ofstream raFile(filename, ios::binary | ios::out);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot create database");
+            }
+            raFile.seekp((fineId) * sizeof(*this));
+            raFile.write(reinterpret_cast<const char *>(this), sizeof(*this));
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
+
+    void retreiveFine(int fineId)
+    {
+        try
+        {
+            fstream raFile(filename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot retrieve record");
+            }
+
+            raFile.seekg((fineId) * sizeof(*this));
+            raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
+
+     void initialiseList()
+    {
+        try
+        {
+            ifstream raFile(filename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot read database");
+            }
+            else
+            {
+                Fine a1;
+
+                for (int idx = 0; idx < Maxfines; idx++)
+                {
+                    raFile.seekg((idx) * sizeof(a1));
+                    raFile.read(reinterpret_cast<char *>(&a1), sizeof(a1));
+
+                    if (a1.Id != -1)
+                    {
+                        finesSaved++;
+                    }
+                    a1.Id = -1;
+                }
+
+                cout << "Number of fines saved: " << finesSaved << endl;
+                raFile.close();
+            }
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+            createBlankRecords();
+        }
+    }
+
+    void createBlankRecords()
+    {
+        try
+        {
+            ofstream raFile(filename, ios::out | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("database cannot be created ");
+                for (int idx = 0; idx < Maxfines; idx++)
+                {
+                    raFile.seekp((idx) * sizeof(*this));
+                    raFile.write(reinterpret_cast<const char *>(this), sizeof(*this));
+                }
+            }
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
     }
 };
 

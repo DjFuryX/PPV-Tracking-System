@@ -63,6 +63,9 @@ public:
         getInput(cin,parish); 
         
     }
+    void setParish(char newParish[]){
+        writeFixedLengthString(parish,newParish);
+    }
 
     void SetAdrress()
     {

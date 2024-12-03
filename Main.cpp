@@ -4,6 +4,7 @@
 #include "ProcessOfficer.h"
 #include "User.h"
 #include "Driver.h"
+#include "JCFOfficer.h"
 // #include"JCFOfficer.h"
 using namespace std;
 
@@ -16,6 +17,11 @@ int main()
 
     userPtr = new Driver();
     userPtr->initialiseList();
+
+    Ticket *ticket = new Ticket();
+    ticket->initialiseList();
+    Fine *fine = new Fine();
+    fine->initialiseList();
 
     system("pause");
     /*int option = 0;  // Initialize option to 0 (safe default value)
@@ -36,7 +42,9 @@ int main()
 
             break;
         case 2:
-            // UserPtr= new JCFOfficer();// Provide Service to JCF officeruser
+        
+            userPtr = new JCFOfficer(200, "Malcolm", "Ironshore Police Station"); // Provide Service to JCF officeruser
+            userPtr->Login();
 
             break;
         case 3:

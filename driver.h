@@ -49,7 +49,7 @@ public:
         writeFixedLengthString(this->emailAddr, emailAddr.c_str());
         this->password = password;
         // currAddr.SetAdrress();
-        // dob.SetDob();
+        // dob.setDate();
     }
     /*Driver(int trn, int contactnumber,string name, string denyReason, string emailAddr)
     {
@@ -100,10 +100,10 @@ public:
         getInput(cin, name);
     }
 
-    void setDob()
+    void setDate()
     {
 
-        dob.SetDob();
+        dob.setDate();
     }
     void setAddress()
     {
@@ -131,7 +131,7 @@ public:
         cout << "Please Enter Drivers's Full Name" << endl;
         setName();
         cout << "Please Enter Drivers's Date of Birth" << endl;
-        setDob();
+        setDate();
         cout << "Please Enter Drivers's Address" << endl;
         setAddress();
         cout << "Please Enter Drivers's Email Address" << endl;
@@ -267,7 +267,7 @@ public:
                 setContactNumber();
                 break;
             case 6:
-                setDob();
+                setDate();
                 break;
             default: // if an invalid number is entered
                 cout << "Invalid option chosen" << endl;
@@ -358,7 +358,7 @@ public:
             if (enteredTRN <= 0 || enteredPassword <= 0)
             {
                 throw runtime_error("Invalid TRN or password. Please try again.");
-                User::ShowMenu();
+                Driver::Login();
             }
 
             // Check if entered TRN and password are correct
