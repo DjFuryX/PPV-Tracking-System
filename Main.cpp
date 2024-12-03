@@ -37,13 +37,13 @@ int main()
         { // case structure is used to determine option selected
         case 1:
 
-            userPtr = new Driver(12345, 6543210, "John", "Traffic Violation", "john.doe@example.com", 540); // Provide Service to Driver
+            userPtr = new Driver(); // Provide Service to Driver
             userPtr->Login();
 
             break;
         case 2:
         
-            userPtr = new JCFOfficer(200, "Malcolm", "Ironshore Police Station"); // Provide Service to JCF officeruser
+            userPtr = new JCFOfficer(200, "Malcolm", "Ironshore Police Station","westmoreland"); // Provide Service to JCF officeruser
             userPtr->Login();
 
             break;

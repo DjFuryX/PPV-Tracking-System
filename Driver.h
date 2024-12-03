@@ -197,7 +197,7 @@ public:
 
     void showAllDrivers(string driverParish)
     {
-        Ticket *record;
+        Ticket *record = new Ticket();
 
         try
         {
@@ -206,15 +206,17 @@ public:
             {
                 throw runtime_error("cannot retrieve record");
             }
-            cout << "Drivers Saved: " << numDriverSaved << endl;
             for (int index = 0; index < numDriverSaved; index++)
             {
 
                 raFile.seekg((index) * sizeof(*this));
                 raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+
+                cout << "Current Parish:  " << currAddr.GetParish().c_str() << endl;
+
                 if (stricmp(currAddr.GetParish().c_str(), driverParish.c_str()) == 0)
                 {
-                   record->showAllTickets(trn);
+                    record->showAllTickets(trn);
                 }
             }
             raFile.close();
@@ -313,6 +315,7 @@ public:
     {
 
         int option = this->ShowMenu(); // get user option
+        Ticket *ticket = new Ticket();
 
         while (option != 0)
         { // Start while loop for main menu
@@ -320,22 +323,31 @@ public:
             switch (option)
             { // case structure is used to determine option selected
             case 1:
-
+                ticket->showAllTickets(trn);
                 break;
             case 2:
-
+                ticket->showAllTickets(trn, "warrant outstanding");
                 break;
             case 3:
-
+                ticket->showAllTickets(trn, "unpaid");
                 break;
             case 4:
+
+                if (ticket->getTicketStatus("warrant outstanding", trn))
+                {
+                    cout << RED "OUTSTANDING WARRANT" << RST << endl;
+                    cout << "please turn yourself in to the " << ticket->getSation() << endl;
+                 //   cout << "Court Location: " << ticket-> << endl;
+                   // cout << "Court Date: " << ticket-> << endl;
+                }{
+
+                     cout << GRN "NO OUTSTANDING WARRANT" << RST << endl;
+                }
                 break;
             case 5:
+                ticket->showAllTickets(trn, "unpaid");
+                ticket->payTicket();
                 break;
-
-            case 6:
-                break;
-
             default: // if an invalid number is entered
                 cout << "Invalid option chosen" << endl;
                 break;
@@ -377,31 +389,26 @@ public:
             // Display Driver's login prompt
             cout << "\n\t\t +----------------------------+ Driver Login +----------------------------+\n"
                  << endl;
-            cout << "\t\tPlease enter TRN:\t";
-            int enteredTRN;
-            cin >> enteredTRN; // Input the TRN
 
-            cout << "\t\tPlease enter Password:\t";
-            int enteredPassword;    // Password as an integer
-            cin >> enteredPassword; // Input the password
+            cout << "\t\tPlease enter Username:\t";
+            getInput(cin, username); // Input the password
 
-            if (enteredTRN <= 0 || enteredPassword <= 0)
-            {
-                throw runtime_error("Invalid TRN or password. Please try again.");
-                Driver::Login();
-            }
+            cout << "\t\tPlease enter Password (TRN):\t";
+            cin >> password; // Input the TRN
+
+            retrieveDriver(findTrn(password));
 
             // Check if entered TRN and password are correct
-            if (enteredTRN == trn && enteredPassword == getPassword())
+            if (strcmp(username, name) == 0 && trn == password)
             {
                 cout << "Login successful! Welcome, Driver " << name << "." << endl;
                 Driver::handler();
-
-                // You can add additional functionality here (e.g., viewing tickets, fines, etc.)
             }
+
             else
             {
-                cout << "Invalid TRN or password. Please try again." << endl;
+                throw runtime_error("Invalid TRN or password. Please try again.");
+                Driver::Login();
             }
         }
         catch (runtime_error &e)

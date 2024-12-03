@@ -19,20 +19,21 @@ class Ticket
 private:
     int ticketNumber;
     int trn;
-    char issuingOfficer[maxStringsize];
     char licensePlateNumber[maxStringsize];
     char status[maxStringsize];
     float ticketAmount;
     Date dueDate;
     Date courtDate;
     Date issueDate;
-    Address courtLocation;
+    int issueBageNumber;
+    char issueOfficer[maxStringsize];
+    char issueParish[maxStringsize];
+    char issueStation[maxStringsize];
 
 public:
     Ticket() // default constructor
     {
         ticketNumber = -1;
-        writeFixedLengthString(issuingOfficer, "OfficerNotSet");
         writeFixedLengthString(licensePlateNumber, "00-0000");
         ticketAmount = 0.0;
         trn = 0;
@@ -40,7 +41,12 @@ public:
     }
 
     // Getters
-    void createTicket(char officer[], char stationParish[], int driverTrn)
+    string getSation()
+    {
+        return issueStation;
+    }
+
+    void createTicket(int badgenumber, string officerName, string officerStation, string officerParish, int driverTrn)
     {
         ticketNumber = ticketsSaved;
         cout << "Please Enter License Plate Number: " << endl;
@@ -64,9 +70,12 @@ public:
         cout << "Please set tickect due date" << endl;
         dueDate.setDate();
         writeFixedLengthString(status, "unpaid");
+        writeFixedLengthString(issueOfficer, officerName);
+        writeFixedLengthString(issueStation, officerStation);
+        writeFixedLengthString(issueParish, officerParish);
         trn = driverTrn;
-        writeFixedLengthString(issuingOfficer, officer);
-        courtLocation.setParish(stationParish);
+        issueBageNumber = badgenumber;
+
         saveTicket(ticketNumber);
         ticketsSaved++;
     }
@@ -74,21 +83,17 @@ public:
     // Generates Ticket Report of Driver
     void viewTicketReport()
     {
+        cout << "Ticket ID: " << ticketNumber << endl;
         cout << "Offender Trn: " << trn << endl;
-        cout << "Issue Date: " << endl;
-        issueDate.Display();
+        cout << "Issue Date: " << issueDate << endl;
         cout << "License Plate Number: " << licensePlateNumber << endl;
         cout << "Ticket Amount: $" << ticketAmount << endl;
-        cout << "Ticket Status: $" << status << endl;
+        cout << "Ticket Status: " << status << endl;
         cout << "Due Date: " << dueDate << endl;
-        // cout << "Court Date: " << courtDate << endl;
-        cout << "Issuing Officer: " << issuingOfficer << endl;
-        // cout << "Court Location: " << courtLocation.GetParish() << endl;
-        cout << RED << "---------------------" << endl;
+        cout << "Issuing Officer: " << issueOfficer << endl;
         cout << "Fines: " << endl;
         Fine *fine = new Fine();
         fine->showAll(ticketNumber);
-        cout << "---------------------" << RST << endl;
     }
 
     void showAllTickets()
@@ -104,11 +109,10 @@ public:
             cout << "Tickets Saved: " << ticketsSaved << endl;
             for (int index = 0; index < ticketsSaved; index++)
             {
-                setTicketStatus();
 
                 raFile.seekg((index) * sizeof(*this));
                 raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
-                viewTicketReport();
+                this->viewTicketReport();
             }
             raFile.close();
         }
@@ -128,18 +132,43 @@ public:
             {
                 throw runtime_error("cannot retrieve record");
             }
-            cout << "Tickets Saved: " << ticketsSaved << endl;
-
             for (int index = 0; index < ticketsSaved; index++)
             {
 
                 raFile.seekg((index) * sizeof(*this));
                 raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
-                if(this->trn==driverTrn){
-                    viewTicketReport();
+                if (this->trn == driverTrn)
+                {
+                    this->viewTicketReport();
                 }
+            }
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
 
-              
+    void showAllTickets(int driverTrn, string status)
+    {
+
+        try
+        {
+            ifstream raFile(ticketFilename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot retrieve record");
+            }
+            for (int index = 0; index < ticketsSaved; index++)
+            {
+
+                raFile.seekg((index) * sizeof(*this));
+                raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+                if (this->trn == driverTrn && strcmp(this->status, status.c_str()) == 0)
+                {
+                    this->viewTicketReport();
+                }
             }
             raFile.close();
         }
@@ -151,7 +180,6 @@ public:
 
     void showAllTickets(string ticketStatus)
     {
-
         try
         {
             ifstream raFile(ticketFilename, ios::in | ios::binary);
@@ -165,9 +193,6 @@ public:
 
                 raFile.seekg((index) * sizeof(*this));
                 raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
-
-                setTicketStatus();
-
                 if (strcmp(this->status, ticketStatus.c_str()) == 0)
                 {
 
@@ -190,12 +215,127 @@ public:
         }
     }
 
+    void payTicket()
+    {
+        int number;
+        float amount;
+        cout << "Please enter ticket id Number: " << endl;
+        cin >> number;
+        retreiveTicket(number);
+        cout << "Please enter amount to pay: " << endl;
+        cin >> amount;
+
+        if (amount > ticketAmount)
+        {
+            amount-=ticketAmount;
+            ticketAmount -= ticketAmount;
+            cout << "your change is : $" << amount<< endl;
+        }
+        else
+        {
+            ticketAmount -= amount;
+        }
+
+        if (ticketAmount == 0)
+        {
+            writeFixedLengthString(status, "paid");
+            cout << "ticket is now paid" << endl;
+        }
+        else
+        {
+            cout << "ticket is not fully paid Balance remaining: $" << ticketAmount << endl;
+        }
+
+        overWriteTicket(number);
+    }
+
+    bool getTicketStatus(string ticketStatus)
+    {
+        bool hasStatus = false;
+        try
+        {
+            ifstream raFile(ticketFilename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot retrieve record");
+            }
+            cout << "Tickets Saved: " << ticketsSaved << endl;
+            for (int index = 0; index < ticketsSaved; index++)
+            {
+
+                raFile.seekg((index) * sizeof(*this));
+                raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+
+                if (strcmp(this->status, ticketStatus.c_str()) == 0)
+                {
+                    hasStatus = true;
+                }
+            }
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+        return hasStatus;
+    }
+
+    bool getTicketStatus(string ticketStatus, int Offendertrn)
+    {
+        bool hasStatus = false;
+        try
+        {
+            ifstream raFile(ticketFilename, ios::in | ios::binary);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot retrieve record");
+            }
+            for (int index = 0; index < ticketsSaved; index++)
+            {
+
+                raFile.seekg((index) * sizeof(*this));
+                raFile.read(reinterpret_cast<char *>(this), sizeof(*this));
+
+                if (strcmp(this->status, ticketStatus.c_str()) == 0 && Offendertrn == trn)
+                {
+                    hasStatus = true;
+                }
+            }
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+        return hasStatus;
+    }
+
     void saveTicket(int ticketId)
     {
 
         try
         {
             ofstream raFile(ticketFilename, ios::binary | ios::app);
+            if (raFile.fail())
+            {
+                throw runtime_error("cannot create database");
+            }
+            raFile.seekp((ticketId) * sizeof(*this));
+            raFile.write(reinterpret_cast<const char *>(this), sizeof(*this));
+            raFile.close();
+        }
+        catch (runtime_error &e)
+        {
+            cerr << e.what() << endl;
+        }
+    }
+
+    void overWriteTicket(int ticketId)
+    {
+
+        try
+        {
+            ofstream raFile(ticketFilename, ios::binary | ios::out);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");
@@ -251,6 +391,8 @@ public:
                     if (ticket.ticketNumber != -1)
                     {
                         ticketsSaved++;
+                        // check if ticket is overdue
+                        setTicketStatus();
                     }
                     ticket.ticketNumber = -1;
                 }

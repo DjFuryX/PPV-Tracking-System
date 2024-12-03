@@ -2,13 +2,13 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <cstdlib>
-#include <iomanip>
-#include "Ticket.h"
 #include "User.h"
-#include "Auxillary.h"
 #include "Driver.h"
+#include "Auxillary.h"
 using namespace std;
+
+#ifndef JCFOfficer_H
+#define JCFOfficer_H
 
 class JCFOfficer : public User
 {
@@ -16,6 +16,7 @@ private:
   int badgenumber;
   char officerName[maxStringsize];
   char assignedStation[maxStringsize];
+  char stationParish[maxStringsize];
 
 public:
   // default constructor//
@@ -24,14 +25,16 @@ public:
     badgenumber = 0;
     writeFixedLengthString(officerName, "NameNotSet");
     writeFixedLengthString(assignedStation, "StationNotSet");
+    writeFixedLengthString(stationParish, "StationNotSet");
   }
 
   // primary constructor
-  JCFOfficer(int bnum, string name, string station)
+  JCFOfficer(int bnum, string name, string station, string officerParish)
   {
     badgenumber = bnum;
     writeFixedLengthString(officerName, name);
     writeFixedLengthString(assignedStation, station);
+    writeFixedLengthString(stationParish, officerParish);
   }
 
   // copy constructor
@@ -40,6 +43,7 @@ public:
     badgenumber = officer.badgenumber;
     writeFixedLengthString(officerName, officer.officerName);
     writeFixedLengthString(assignedStation, officer.assignedStation);
+    writeFixedLengthString(stationParish, officer.stationParish);
   }
 
   // Setters
@@ -65,6 +69,17 @@ public:
     writeFixedLengthString(assignedStation, station);
   }
 
+  string getOfficerName()
+  {
+
+    return officerName;
+  }
+
+  string getOfficerStation()
+  {
+
+    return assignedStation;
+  }
   // Login function
   void Login() override
   {
@@ -90,7 +105,6 @@ public:
       else
       {
         cout << "Invalid badge number or password. Please try again." << endl;
-        system("pause");
       }
     }
     catch (runtime_error &e)
@@ -123,6 +137,10 @@ public:
 
       case 4:
         ticketsParish();
+      case 5:
+
+        break;
+      case 6:
 
         break;
       case 7:
@@ -156,7 +174,7 @@ public:
     cout << "\n\t\t | " CYN "7." RST "  Show All Tickets                                             |" << endl;
     cout << "\n\t\t | " CYN "0." RST "  Exit                                                         |" << endl;
     cout << "\t\t +------------------------------------------------------------------+" << endl;
-    cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;  // prompts for user choice
+    cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl; // prompts for user choice
     cin >> choice;
     system("cls");
     // clears the screen
@@ -184,7 +202,7 @@ public:
     {
       cout << "User Found" << endl;
       driver.retrieveDriver(id);
-      newTicket.createTicket(this->officerName, this->assignedStation, driver.GetTrn());
+      newTicket.createTicket(badgenumber ,officerName, assignedStation,stationParish, driver.GetTrn());
     }
   }
 
@@ -212,10 +230,12 @@ public:
     char ticketParish[maxStringsize];
     cout << "Please Enter Parish Name" << endl;
     getInput(cin, ticketParish);
-  
-    cout << "---------------Tickets in "<<ticketParish<<"--------------------"<< endl;
+
+    cout << "---------------Tickets in " << ticketParish << "--------------------" << endl;
     driver->showAllDrivers(ticketParish);
   }
 
   void initialiseList() override {};
 };
+
+#endif // JCFOfficer.h

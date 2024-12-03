@@ -87,15 +87,17 @@ public:
 
     void displayFine()
     {
+        cout << RED << "---------------------" << endl;
         cout << "Fine Ticket Number: " << ticketId << endl;
         cout << "Fine Offence Code: " << offenceCode << endl;
         cout << "Fine Offence Description: " << offenceDescription << endl;
-        cout << "Fine Amount: $"<< fineAmount << endl;
+        cout << "Fine Amount: $" << fineAmount << endl;
+        cout << "---------------------" << RST << endl;
     }
 
     void showAll(int ticketID)
     {
-    
+
         try
         {
             ifstream raFile(filename, ios::in | ios::binary);

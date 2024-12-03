@@ -76,8 +76,6 @@ public:
         int currenttotalDays=this->GetDay()+this->GetMonth()*28+this->GetYear()*365;
         int dueTotalDays=date.GetDay()+date.GetMonth()*28+date.GetYear()*365;
         int daysleft=currenttotalDays-dueTotalDays;
-
-        cout<<"Days to due date"<<daysleft<<endl;
         return daysleft;
     }
 };
