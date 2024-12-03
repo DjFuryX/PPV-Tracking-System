@@ -69,6 +69,13 @@ public:
     writeFixedLengthString(assignedStation, station);
   }
 
+  void setStationParish(const string &parish) 
+  {
+    writeFixedLengthString(stationParish, parish);
+  }
+
+
+  //Getters
   string getOfficerName()
   {
 
@@ -80,6 +87,18 @@ public:
 
     return assignedStation;
   }
+  //added
+  int getBadgeNumber() 
+  {
+    return badgenumber;
+  }
+  string getStationParish() 
+  {
+    return stationParish;
+  }
+
+
+
   // Login function
   void Login() override
   {
@@ -138,6 +157,7 @@ public:
 
       case 4:
         ticketsParish();
+        break;
       case 5:
 
         break;
