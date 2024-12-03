@@ -144,16 +144,16 @@ public:
     system("cls");                                 // clears the screen
     cout << "Date: " << ctime(&timestamp) << endl; // print current date and time
     /*prints a menu so the user can select their desired choice*/
-    cout << "\n\t\t +--------------------------------+ JCF Officer Menu +--------------------------------+" << endl;
-    cout << "\n\t\t | " CYN "1." RST "  Issue Ticket                                                     |" << endl;
-    cout << "\n\t\t | " CYN "2." RST "  Update Ticket                                                    |" << endl;
-    cout << "\n\t\t | " CYN "3." RST "  View Tickets Due                                                 |" << endl;
-    cout << "\n\t\t | " CYN "4." RST "  View Tickets Parish                                              |" << endl;
-    cout << "\n\t\t | " CYN "5." RST "  View Offenders Tickets-Due                                       |" << endl;
-    cout << "\n\t\t | " CYN "6." RST "  Check Warrant Status                                             |" << endl;
-    cout << "\n\t\t | " CYN "0." RST "  Exit                                                             |" << endl;
-    cout << "\t\t +-----------------------------------------------------------------------------------+" << endl;
-    cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl; // prompts for user choice
+    cout << "\n\t\t +--------------------------+ JCF Officer Menu +--------------------+" << endl;
+    cout << "\n\t\t | " CYN "1." RST "  Issue Ticket                                                 |" << endl;
+    cout << "\n\t\t | " CYN "2." RST "  Update Ticket                                                |" << endl;
+    cout << "\n\t\t | " CYN "3." RST "  View Tickets Due                                             |" << endl;
+    cout << "\n\t\t | " CYN "4." RST "  View Tickets Parish                                          |" << endl;
+    cout << "\n\t\t | " CYN "5." RST "  View Offenders Tickets-Due                                   |" << endl;
+    cout << "\n\t\t | " CYN "6." RST "  Check Warrant Status                                         |" << endl;
+    cout << "\n\t\t | " CYN "0." RST "  Exit                                                         |" << endl;
+    cout << "\t\t +------------------------------------------------------------------+" << endl;
+    cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;  // prompts for user choice
     cin >> choice;
     system("cls");
     // clears the screen
