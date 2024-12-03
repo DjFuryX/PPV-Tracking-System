@@ -90,9 +90,9 @@ public:
         cout << "Date: " << ctime(&timestamp) << endl; // print current date and time
         /*prints a menu so the user can select their desired choice*/
         cout << "\n\t\t +--------------------------------+ Process Officer Menu +--------------------------------+" << endl;
-        cout << "\n\t\t | " CYN "1." RST "  Applicant                                                              |" << endl;
-        cout << "\n\t\t | " CYN "2." RST "  Driver                                                                 |" << endl;
-        cout << "\n\t\t | " CYN "0." RST "  Exit                                                                   |" << endl;
+        cout << "\n\t\t | " CYN "1." RST "  Applicant                                                                    |" << endl;
+        cout << "\n\t\t | " CYN "2." RST "  Driver                                                                       |" << endl;
+        cout << "\n\t\t | " CYN "0." RST "  Exit                                                                         |" << endl;
         cout << "\t\t +------------------------------------------------------------------------------------+" << endl;
         cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;
  // prompts for user choice
