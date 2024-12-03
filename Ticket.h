@@ -246,7 +246,7 @@ public:
             cout << "ticket is not fully paid Balance remaining: $" << ticketAmount << endl;
         }
 
-        overWriteTicket(number);
+        saveTicket(number);
     }
 
     bool getTicketStatus(string ticketStatus)
@@ -330,26 +330,7 @@ public:
         }
     }
 
-    void overWriteTicket(int ticketId)
-    {
-
-        try
-        {
-            ofstream raFile(ticketFilename, ios::binary | ios::out);
-            if (raFile.fail())
-            {
-                throw runtime_error("cannot create database");
-            }
-            raFile.seekp((ticketId) * sizeof(*this));
-            raFile.write(reinterpret_cast<const char *>(this), sizeof(*this));
-            raFile.close();
-        }
-        catch (runtime_error &e)
-        {
-            cerr << e.what() << endl;
-        }
-    }
-
+   
     void retreiveTicket(int ticketId)
     {
         try

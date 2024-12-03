@@ -23,10 +23,10 @@ private:
     int appID;
     bool recentAccident;
     bool policeRecord;
+    bool ticketOutstanding;
 
 public:
     Applicant()
-        : Driver()
     {
         appID = 100;
         trn = 0;
@@ -34,6 +34,7 @@ public:
         writeFixedLengthString(name, "NotSet");
         writeFixedLengthString(emailAddr, "Notset");
         writeFixedLengthString(denyReason, "NotSet");
+        writeFixedLengthString(status, "NotSet");
     }
 
     int getappID()
@@ -67,8 +68,10 @@ public:
         return (userInput.compare("y") == 0) ? true : false;
     }
 
+ 
     void CreateApplication()
     {
+        Ticket *ticket=new Ticket();
         cout << "Please Enter Applicants TRN" << endl;
         setTrn();
         cout << "Please Enter Applicant's Full Name" << endl;
@@ -85,7 +88,9 @@ public:
         recentAccident = setQualification(cin);
         cout << "Does the driver have a negative police record?\n Y/N: " << endl;
         policeRecord = setQualification(cin);
-
+        cout<<"checking for outstanding tickets: "<<endl;
+        ticketOutstanding= ticket->getTicketStatus("warrant outstanding",trn);
+        cout<<"Applicant has ticket due: "<<ticketOutstanding<<endl;
         appID += numApplicationSaved;
         SaveApplication(appID);
         numApplicationSaved++;
@@ -169,13 +174,13 @@ public:
         cout << "\n\t\t | " CYN "1." RST "  Create Application                                             |" << endl;
         cout << "\n\t\t | " CYN "2." RST "  Update Application                                             |" << endl;
         cout << "\n\t\t | " CYN "3." RST "  Delete Application                                             |" << endl;
-        cout << "\n\t\t | " CYN "4." RST "  Reject Application                                             |" << endl;
-        cout << "\n\t\t | " CYN "5." RST "  Check Application Status                                       |" << endl;
+        cout << "\n\t\t | " CYN "4." RST "  Set Application  Status                                        |" << endl;
+        cout << "\n\t\t | " CYN "5." RST "  Find Applicant Info                                            |" << endl;
         cout << "\n\t\t | " CYN "6." RST "  Show all Applicants                                            |" << endl;
         cout << "\n\t\t | " CYN "0." RST "  Exit                                                           |" << endl;
         cout << "\t\t +--------------------------------------------------------------------+" << endl;
         cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;
- // prompts for user choice
+        // prompts for user choice
         cin >> choice;
         system("cls");
         // clears the screen
@@ -201,6 +206,10 @@ public:
             case 3:
                 this->DeleteApplication();
                 break;
+            case 4:
+                this->setApplicationStatus();
+            case 5:
+                this->findApplicantInfo();
             case 6:
                 this->showAllApplicants();
                 break;
@@ -213,6 +222,84 @@ public:
             option = this->ShowMenu(); // get user option
         }
     }
+
+    void setApplicationStatus()
+    {
+
+        int Userinput;
+        cout << "Enter the Applicants Tax Registration Number: " << endl;
+        cin >> Userinput;
+
+        int key = findTrn(Userinput);
+
+        if (key != -1)
+        {
+
+            retrieveApplication(key);
+            int option = statusMenu(); // get user option
+
+            while (option != 0)
+            { // Start while loop for main menu
+
+                switch (option)
+                { // case structure is used to determine option selected
+                case 1:
+                    writeFixedLengthString(status,"Approved");
+                    break;
+                case 2:
+                   writeFixedLengthString(status,"Pending");
+                    break;
+                case 3:
+                    writeFixedLengthString(status,"Rejected");
+                    break;
+                default: // if an invalid number is entered
+                    cout << "Invalid option chosen" << endl;
+                    break;
+                } // end switch case
+
+                system("pause");
+                option = statusMenu(); // get user option
+            }
+        }
+    }
+
+    int statusMenu()
+    {
+        int choice;
+        // Get current date and time
+        time_t timestamp;
+        time(&timestamp);
+        system("cls");                                 // clears the screen
+        cout << "Date: " << ctime(&timestamp) << endl; // print current date and time
+        /*prints a menu so the user can select their desired choice*/
+        cout << "\n\t\t +------------------------+ Application Menu +------------------------+" << endl;
+        cout << "\n\t\t | " CYN "1." RST "  Set Approved                                                   |" << endl;
+        cout << "\n\t\t | " CYN "2." RST "  Set Pending                                                    |" << endl;
+        cout << "\n\t\t | " CYN "3." RST "  Set Rejected                                                   |" << endl;
+        cout << "\n\t\t | " CYN "0." RST "  Exit                                                           |" << endl;
+        cout << "\t\t +--------------------------------------------------------------------+" << endl;
+        cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;
+        // prompts for user choice
+        cin >> choice;
+        system("cls");
+        // clears the screen
+        return choice;
+    }
+
+   void  findApplicantInfo(){
+
+        int Userinput;
+        cout << "Enter the Applicants Tax Registration Number: " << endl;
+        cin >> Userinput;
+
+        int key = findTrn(Userinput);
+        if (key != -1)
+        {
+            retrieveDriver(key);
+            Display();
+        }
+
+   }
 
     int findTrn(int searchQuery)
     {
