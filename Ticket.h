@@ -315,7 +315,7 @@ public:
 
         try
         {
-            ofstream raFile(ticketFilename, ios::binary | ios::app);
+            fstream raFile(ticketFilename,ios::in | ios::out| ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");

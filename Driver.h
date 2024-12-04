@@ -1,5 +1,4 @@
 // Driver Class
-#include <stdexcept>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -454,7 +453,7 @@ public:
 
         try
         {
-            ofstream raFile(driverFilename, ios::binary | ios::app);
+            fstream raFile(driverFilename,ios::in | ios::out| ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");

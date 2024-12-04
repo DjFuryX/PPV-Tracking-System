@@ -128,7 +128,7 @@ public:
 
         try
         {
-            ofstream raFile(filename, ios::binary | ios::app);
+            fstream raFile(filename, ios::binary | ios::app);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");

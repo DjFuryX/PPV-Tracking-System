@@ -28,37 +28,47 @@ int main()
 
     // You need to initialize userPtr before calling ShowMenu()
     option = userPtr != nullptr ? userPtr->ShowMenu() : 0; // get user option (only call ShowMenu if userPtr is valid)*/
+    try
+    {
+        int option = userPtr->User::ShowMenu(); // get user option
+        while (option != 0)
+        { // Start while loop for main menu
 
-    int option = userPtr->User::ShowMenu(); // get user option
-    while (option != 0)
-    { // Start while loop for main menu
+            switch (option)
+            { // case structure is used to determine option selected
+            case 1:
 
-        switch (option)
-        { // case structure is used to determine option selected
-        case 1:
+                userPtr = new Driver(); // Provide Service to Driver
+                userPtr->Login();
 
-            userPtr = new Driver(); // Provide Service to Driver
-            userPtr->Login();
+                break;
+            case 2:
 
-            break;
-        case 2:
-        
-            userPtr = new JCFOfficer(200, "Malcolm", "Ironshore Police Station","westmoreland"); // Provide Service to JCF officeruser
-            userPtr->Login();
+                userPtr = new JCFOfficer(200, "Malcolm", "Ironshore Police Station", "westmoreland"); // Provide Service to JCF officeruser
+                userPtr->Login();
 
-            break;
-        case 3:
-            userPtr = new ProcessOfficer(240, "Norman", "Ramble Police Station");
-            userPtr->Login();
+                break;
+            case 3:
+                userPtr = new ProcessOfficer(240, "Norman", "Ramble Police Station");
+                userPtr->Login();
 
-            break;
-        default: // if an invalid number is entered
-            cout << "Invalid option chosen" << endl;
-            break;
-        } // end switch case
-        system("pause");
-        option = userPtr->User::ShowMenu(); // get user option
+                break;
+            default: // if an invalid number is entered
+                cout << "Invalid option chosen" << endl;
+                break;
+            } // end switch case
+            system("pause");
+            option = userPtr->User::ShowMenu(); // get user option
+        }
     }
+
+    catch (runtime_error &e)
+    {
+        system("pause");
+        cerr << "System error has occured: " << e.what() << endl;
+        system("cls");
+    }
+
     cout << "\n\nGoodbye\nClosing application......." << endl; // closing message
     return 0;                                                  // 0 indicates that the program terminated successfully
 }

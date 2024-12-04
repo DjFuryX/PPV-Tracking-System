@@ -73,7 +73,7 @@ public:
     }
 
     int daysToDueDate(Date date){
-        int currenttotalDays=this->GetDay()+this->GetMonth()*28+this->GetYear()*365;
+        int currenttotalDays=GetDay()+GetMonth()*28+GetYear()*365;
         int dueTotalDays=date.GetDay()+date.GetMonth()*28+date.GetYear()*365;
         int daysleft=currenttotalDays-dueTotalDays;
         return daysleft;

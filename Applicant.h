@@ -90,7 +90,7 @@ public:
         policeRecord = setQualification(cin);
         cout<<"checking for outstanding tickets: "<<endl;
         ticketOutstanding= ticket->getTicketStatus("warrant outstanding",trn);
-        cout<<"Applicant has ticket due: "<<ticketOutstanding<<endl;
+        cout<<"Applicant has ticket due: "<<(ticketOutstanding == 1 ? "True" : "False")<<endl;
         appID += numApplicationSaved;
         SaveApplication(appID);
         numApplicationSaved++;
@@ -123,7 +123,7 @@ public:
 
         try
         {
-            ifstream raFile(appFilename, ios::in | ios::binary);
+            ifstream raFile(appFilename,ios::in | ios::out | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot retrieve record");
@@ -336,7 +336,7 @@ public:
 
         try
         {
-            ofstream raFile(appFilename, ios::binary | ios::app);
+            fstream raFile(appFilename,ios::in | ios::out|ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");
