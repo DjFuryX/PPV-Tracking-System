@@ -126,6 +126,12 @@ public:
     {
         cout << "Please Enter Drivers TRN" << endl;
         setTrn();
+
+        if (findTrn(trn) != -1)
+        {
+            cout << "Driver with this TRN already exists!" << endl;
+            createDriver();
+        }
         // add check for duplicate driver
         cout << "Please Enter Drivers's Full Name" << endl;
         setName();
@@ -336,10 +342,11 @@ public:
                 {
                     cout << RED "OUTSTANDING WARRANT" << RST << endl;
                     cout << "please turn yourself in to the " << ticket->getSation() << endl;
-                    cout << "Court Location: " << ticket->getissueParish()<< endl;
-                }{
+                    cout << "Court Location: " << ticket->getissueParish() << endl;
+                }
+                {
 
-                     cout << GRN "NO OUTSTANDING WARRANT" << RST << endl;
+                    cout << GRN "NO OUTSTANDING WARRANT" << RST << endl;
                 }
                 break;
             case 5:
@@ -452,7 +459,7 @@ public:
 
         try
         {
-            fstream raFile(driverFilename,ios::in | ios::out| ios::binary);
+            fstream raFile(driverFilename, ios::in | ios::out | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");

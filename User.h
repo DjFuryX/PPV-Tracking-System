@@ -50,6 +50,7 @@ public:
         system("cls");                                 // clears the screen
         cout << "Date: " << ctime(&timestamp) << endl; // print current date and time
         /*prints a menu so the user can select their desired choice*/
+         cout <<GRN "\n\t\t                             PPV Tracking System                               " RST<< endl;
         cout << "\n\t\t +----------------------------+ Please Login +---------------------------+" << endl;
         cout << "  \t\t | " CYN "1." RST "  Driver                                                            |" << endl;
         cout << "\n\t\t | " CYN "2." RST "  JCF Officer                                                       |" << endl;

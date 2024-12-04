@@ -11,6 +11,7 @@ using namespace std;
 #ifndef Applicant_H
 #define Applicant_H
 
+//variables for random access file
 const int MaxAppRecord = 500;
 const string appFilename = "ApplicationList.dat";
 int numApplicationSaved = 0;
@@ -19,13 +20,15 @@ class Applicant : public Driver
 {
 
 private:
-    char status[maxStringsize];
-    int appID;
-    bool recentAccident;
-    bool policeRecord;
+    char status[maxStringsize];//status of application
+    int appID;  //application id
+    //booleans for applicant qualification
+    bool recentAccident;   
+    bool policeRecord;      
     bool ticketOutstanding;
 
 public:
+    //default constructor
     Applicant()
     {
         appID = 100;
@@ -40,11 +43,13 @@ public:
         ticketOutstanding=false;
     }
 
+    //Getter for application ID
     int getappID()
     {
         return appID;
     }
 
+    //Function to handle yes no input and logic for applicant qualification for ppv license
     bool setQualification(istream &stream)
     {
         string userInput;
@@ -71,9 +76,13 @@ public:
         return (userInput.compare("y") == 0) ? true : false;
     }
 
+
+    //method to create a new application from user input
     void CreateApplication()
-    {
+    {   
+        //create a ticket pointer
         Ticket *ticket = new Ticket();
+        //prompt for user input and save results
         cout << "Please Enter Applicants TRN" << endl;
         setTrn();
         cout << "Please Enter Applicant's Full Name" << endl;
@@ -93,11 +102,16 @@ public:
         cout << "checking for outstanding tickets: " << endl;
         ticketOutstanding = ticket->getTicketStatus("warrant outstanding", trn);
         cout << "Applicant has ticket due: " << (ticketOutstanding == 1 ? "True" : "False") << endl;
+        //increment application id
         appID += numApplicationSaved;
+        //Save application to file
         SaveApplication(appID);
+        //increment the number of applications saved
         numApplicationSaved++;
     }
 
+
+    //function to update Application details
     void UpdateApplication()
     {
 
@@ -210,8 +224,10 @@ public:
                 break;
             case 4:
                 this->setApplicationStatus();
+                break;
             case 5:
                 this->findApplicantInfo();
+                break;
             case 6:
                 this->showAllApplicants();
                 break;
