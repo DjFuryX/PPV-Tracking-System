@@ -35,6 +35,9 @@ public:
         writeFixedLengthString(emailAddr, "Notset");
         writeFixedLengthString(denyReason, "NotSet");
         writeFixedLengthString(status, "NotSet");
+        recentAccident=false;
+        policeRecord=false;
+        ticketOutstanding=false;
     }
 
     int getappID()
@@ -68,10 +71,9 @@ public:
         return (userInput.compare("y") == 0) ? true : false;
     }
 
- 
     void CreateApplication()
     {
-        Ticket *ticket=new Ticket();
+        Ticket *ticket = new Ticket();
         cout << "Please Enter Applicants TRN" << endl;
         setTrn();
         cout << "Please Enter Applicant's Full Name" << endl;
@@ -88,9 +90,9 @@ public:
         recentAccident = setQualification(cin);
         cout << "Does the driver have a negative police record?\n Y/N: " << endl;
         policeRecord = setQualification(cin);
-        cout<<"checking for outstanding tickets: "<<endl;
-        ticketOutstanding= ticket->getTicketStatus("warrant outstanding",trn);
-        cout<<"Applicant has ticket due: "<<(ticketOutstanding == 1 ? "True" : "False")<<endl;
+        cout << "checking for outstanding tickets: " << endl;
+        ticketOutstanding = ticket->getTicketStatus("warrant outstanding", trn);
+        cout << "Applicant has ticket due: " << (ticketOutstanding == 1 ? "True" : "False") << endl;
         appID += numApplicationSaved;
         SaveApplication(appID);
         numApplicationSaved++;
@@ -123,7 +125,7 @@ public:
 
         try
         {
-            ifstream raFile(appFilename,ios::in | ios::out | ios::binary);
+            ifstream raFile(appFilename, ios::in | ios::out | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot retrieve record");
@@ -244,13 +246,13 @@ public:
                 switch (option)
                 { // case structure is used to determine option selected
                 case 1:
-                    writeFixedLengthString(status,"Approved");
+                    writeFixedLengthString(status, "Approved");
                     break;
                 case 2:
-                   writeFixedLengthString(status,"Pending");
+                    writeFixedLengthString(status, "Pending");
                     break;
                 case 3:
-                    writeFixedLengthString(status,"Rejected");
+                    writeFixedLengthString(status, "Rejected");
                     break;
                 default: // if an invalid number is entered
                     cout << "Invalid option chosen" << endl;
@@ -286,7 +288,8 @@ public:
         return choice;
     }
 
-   void  findApplicantInfo(){
+    void findApplicantInfo()
+    {
 
         int Userinput;
         cout << "Enter the Applicants Tax Registration Number: " << endl;
@@ -298,8 +301,7 @@ public:
             retrieveDriver(key);
             Display();
         }
-
-   }
+    }
 
     int findTrn(int searchQuery)
     {
@@ -336,7 +338,7 @@ public:
 
         try
         {
-            fstream raFile(appFilename,ios::in | ios::out|ios::binary);
+            fstream raFile(appFilename, ios::in | ios::out | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");
@@ -386,6 +388,8 @@ public:
         fout.close();                                  // close the output file
         remove(appFilename.c_str());                   // delete the old main file
         rename("tmp_record.dat", appFilename.c_str()); // rename the temporary file to the main one
+
+        numApplicationSaved--;
     }
 
     void retrieveApplication(int idx)

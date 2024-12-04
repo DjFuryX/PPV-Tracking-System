@@ -336,8 +336,7 @@ public:
                 {
                     cout << RED "OUTSTANDING WARRANT" << RST << endl;
                     cout << "please turn yourself in to the " << ticket->getSation() << endl;
-                 //   cout << "Court Location: " << ticket-> << endl;
-                   // cout << "Court Date: " << ticket-> << endl;
+                    cout << "Court Location: " << ticket->getissueParish()<< endl;
                 }{
 
                      cout << GRN "NO OUTSTANDING WARRANT" << RST << endl;

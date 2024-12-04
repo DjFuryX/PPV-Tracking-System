@@ -69,13 +69,12 @@ public:
     writeFixedLengthString(assignedStation, station);
   }
 
-  void setStationParish(const string &parish) 
+  void setStationParish(const string &parish)
   {
     writeFixedLengthString(stationParish, parish);
   }
 
-
-  //Getters
+  // Getters
   string getOfficerName()
   {
 
@@ -87,17 +86,15 @@ public:
 
     return assignedStation;
   }
-  //added
-  int getBadgeNumber() 
+  // added
+  int getBadgeNumber()
   {
     return badgenumber;
   }
-  string getStationParish() 
+  string getStationParish()
   {
     return stationParish;
   }
-
-
 
   // Login function
   void Login() override
@@ -136,7 +133,7 @@ public:
 
   void JCFHandler()
   {
-
+    Ticket *ticket = new Ticket();
     int option = showMenu(); // get user option
 
     while (option != 0)
@@ -148,24 +145,21 @@ public:
         issueTicket();
         break;
       case 2:
+        updateTicket(ticket);
         break;
-        
-
       case 3:
-        viewTicketsDue();
+        cout << "Viewing All tickets that are due..." << endl;
+        ticket->showAllTickets("warrant outstanding");
         break;
-
       case 4:
         ticketsParish();
         break;
       case 5:
-
+        ticketsDueByDriver(ticket);
         break;
       case 6:
-
-        break;
-      case 7:
-        viewTickets();
+        cout << "Viewing all tickets..." << endl;
+        ticket->showAllTickets();
         break;
       default: // if an invalid number is entered
         cout << "Invalid option chosen" << endl;
@@ -190,9 +184,8 @@ public:
     cout << "\n\t\t | " CYN "2." RST "  Update Ticket                                                |" << endl;
     cout << "\n\t\t | " CYN "3." RST "  View Tickets Due                                             |" << endl;
     cout << "\n\t\t | " CYN "4." RST "  View Tickets Parish                                          |" << endl;
-    cout << "\n\t\t | " CYN "5." RST "  View Offenders Tickets-Due                                   |" << endl;
-    cout << "\n\t\t | " CYN "6." RST "  Check Warrant Status                                         |" << endl;
-    cout << "\n\t\t | " CYN "7." RST "  Show All Tickets                                             |" << endl;
+    cout << "\n\t\t | " CYN "5." RST "  Check Warrant Status                                         |" << endl;
+    cout << "\n\t\t | " CYN "6." RST "  Show All Tickets                                             |" << endl;
     cout << "\n\t\t | " CYN "0." RST "  Exit                                                         |" << endl;
     cout << "\t\t +------------------------------------------------------------------+" << endl;
     cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl; // prompts for user choice
@@ -223,25 +216,36 @@ public:
     {
       cout << "User Found" << endl;
       driver.retrieveDriver(id);
-      newTicket.createTicket(badgenumber ,officerName, assignedStation,stationParish, driver.GetTrn());
+      newTicket.createTicket(badgenumber, officerName, assignedStation, stationParish, driver.GetTrn());
     }
   }
 
-  // Function to view tickets that are due
-  void viewTicketsDue()
+  void updateTicket(Ticket *ticket)
   {
-    Ticket *ticket = new Ticket();
-    cout << "Viewing tickets that are due..." << endl;
-    ticket->showAllTickets("warrant outstanding");
+    Driver *driver = new Driver;
+    int drivertrn;
+
+    cout << "Please Enter Drivers Trn: " << endl;
+    cin >> drivertrn;
+
+    if (driver->findTrn(drivertrn) != -1)
+    {
+
+      ticket->updateTicket(drivertrn);
+    }
+    else
+    {
+
+      cout << "Driver trn was not found" << endl;
+    }
   }
 
-  // Function to view all tickets
-  void viewTickets()
+  void ticketsDueByDriver(Ticket *ticket)
   {
-    Ticket *ticket = new Ticket();
-    cout << "Viewing all tickets..." << endl;
-
-    ticket->showAllTickets();
+    int trn;
+    cout << "Please enter trn of Driver" << endl;
+    cin >> trn;
+    ticket->showAllTickets(trn, "warrant outstanding");
   }
 
   // Function to view outstanding tickets from drivers in each parish

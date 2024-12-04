@@ -14,6 +14,12 @@ protected:
     int password;
 
 public:
+
+    User(){
+        writeFixedLengthString(username,"usernameNotSet");
+        password=0;
+    }
+
     string getUserName()
     {
         return username;

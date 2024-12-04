@@ -40,17 +40,82 @@ public:
         writeFixedLengthString(status, "Notset");
     }
 
+    // Setters
+    void setTicketTrn(int newTrn)
+    {
+        trn = newTrn;
+    }
+
+    void setIssueDate()
+    {
+        issueDate.setDate();
+    }
+
+    void setDueDate()
+    {
+
+        dueDate.setDate();
+    }
+
+    void setLicensePlateNumber()
+    {
+        getInput(cin, licensePlateNumber);
+    }
+
+    void setTicketStatus(string newStatus)
+    {
+        writeFixedLengthString(status, newStatus);
+    }
+
+    void setIssueOfficerName(string officerName)
+    {
+        writeFixedLengthString(issueOfficer, officerName);
+    }
+
+    void setIssueOfficerStation(string officerStation)
+    {
+        writeFixedLengthString(issueOfficer, officerStation);
+    }
+
+    void setIssueParish(string issueParish)
+    {
+        writeFixedLengthString(issueOfficer, issueParish);
+    }
+
     // Getters
     string getSation()
     {
         return issueStation;
     }
 
+    string getissueParish()
+    {
+
+        return issueParish;
+    }
+
     void createTicket(int badgenumber, string officerName, string officerStation, string officerParish, int driverTrn)
     {
         ticketNumber = ticketsSaved;
         cout << "Please Enter License Plate Number: " << endl;
-        getInput(cin, licensePlateNumber);
+        setLicensePlateNumber();
+        addFine();
+        cout << "Please set issue date" << endl;
+        setIssueDate();
+        cout << "Please set tickect due date" << endl;
+        setDueDate();
+        setTicketStatus("unpaid");
+        setIssueOfficerName(officerName);
+        setIssueOfficerStation(officerStation);
+        setIssueParish(officerParish);
+        trn = driverTrn;
+        issueBageNumber = badgenumber;
+        saveTicket(ticketNumber);
+        ticketsSaved++;
+    }
+
+    void addFine()
+    {
         char option[1];
 
         do
@@ -64,20 +129,6 @@ public:
             option[0] = tolower(option[0]);
 
         } while (strcmp(option, "y") == 0);
-
-        cout << "Please set issue date" << endl;
-        issueDate.setDate();
-        cout << "Please set tickect due date" << endl;
-        dueDate.setDate();
-        writeFixedLengthString(status, "unpaid");
-        writeFixedLengthString(issueOfficer, officerName);
-        writeFixedLengthString(issueStation, officerStation);
-        writeFixedLengthString(issueParish, officerParish);
-        trn = driverTrn;
-        issueBageNumber = badgenumber;
-
-        saveTicket(ticketNumber);
-        ticketsSaved++;
     }
 
     // Generates Ticket Report of Driver
@@ -94,6 +145,82 @@ public:
         cout << "Fines: " << endl;
         Fine *fine = new Fine();
         fine->showAll(ticketNumber);
+    }
+
+    int updateMenu()
+    {
+        int choice;
+        // Get current date and time
+        time_t timestamp;
+        time(&timestamp);
+        system("cls");                                 // clears the screen
+        cout << "Date: " << ctime(&timestamp) << endl; // print current date and time
+        /*prints a menu so the user can select their desired choice*/
+        cout << "\n\t\t +------------------------+ Update Menu +---------------------+" << endl;
+        cout << "  \t\t | " CYN "1." RST "  Change Offender TRN                                    |" << endl;
+        cout << "\n\t\t | " CYN "2." RST "  Change Issue Date                                      |" << endl;
+        cout << "\n\t\t | " CYN "3." RST "  Change Due Date                                        |" << endl;
+        cout << "\n\t\t | " CYN "4." RST "  Change Issue Officer                                   |" << endl;
+        cout << "\n\t\t | " CYN "5." RST "  Cahnge Issue Station                                   |" << endl;
+        cout << "\n\t\t | " CYN "6." RST "  Change Issue Parish                                    |" << endl;
+        cout << "\n\t\t | " CYN "0." RST "  Exit                                                   |" << endl;
+        cout << "\t\t +------------------------------------------------------------+" << endl;
+        cout << "\nPlease select with the " CYN "digits" RST " on the left:  " << endl;
+        // prompts for user choice
+        cin >> choice;
+        system("cls");
+        // clears the screen
+        return choice;
+    }
+
+    void updateTicket(int drivertrn)
+    {
+        
+        int ticketId;
+        showAllTickets(drivertrn);
+
+        cout << "Please Enter Id of Ticket to edit: " << endl;
+        cin >> ticketId;
+        retreiveTicket(ticketId);
+
+        int option = updateMenu(); // get user option
+
+        while (option != 0)
+        { // Start while loop for main menu
+
+            switch (option)
+            { // case structure is used to determine option selected
+            case 1:
+                cout << "Please enter new Trn" << endl;
+                cin >> trn;
+                break;
+            case 2:
+                cout << "Please New  Issue Address" << endl;
+                issueDate.setDate();
+                break;
+            case 3:
+                cout << "Please New  Due Address" << endl;
+                dueDate.setDate();
+                break;
+            case 4:
+                cout << "Plese enter New issue Officer" << endl;
+                getInput(cin, issueOfficer);
+                break;
+            case 5:
+                cout << "Plese enter New issue Station" << endl;
+                getInput(cin, issueStation);
+                break;
+            case 6:
+                cout << "Plese enter New issue Parish" << endl;
+                getInput(cin, issueParish);
+                break;
+            default: // if an invalid number is entered
+                cout << "Invalid option chosen" << endl;
+                break;
+            } // end switch case
+            option = updateMenu(); // get user option
+        }
+        saveTicket(ticketId);
     }
 
     void showAllTickets()
@@ -227,9 +354,9 @@ public:
 
         if (amount > ticketAmount)
         {
-            amount-=ticketAmount;
+            amount -= ticketAmount;
             ticketAmount -= ticketAmount;
-            cout << "your change is : $" << amount<< endl;
+            cout << "your change is : $" << amount << endl;
         }
         else
         {
@@ -315,7 +442,7 @@ public:
 
         try
         {
-            fstream raFile(ticketFilename,ios::in | ios::out| ios::binary);
+            fstream raFile(ticketFilename, ios::in | ios::out | ios::binary);
             if (raFile.fail())
             {
                 throw runtime_error("cannot create database");
@@ -330,7 +457,6 @@ public:
         }
     }
 
-   
     void retreiveTicket(int ticketId)
     {
         try
